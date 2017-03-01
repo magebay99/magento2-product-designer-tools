@@ -1,0 +1,13 @@
+<?php
+/**
+/** @var $block \PDP\Integration\Block\Cart\Item\Renderer\Actions\Edit */
+?>
+<?php if ($block->isProductVisibleInSiteVisibility()): ?>
+    <a class="action action-edit"
+       href="<?php /* @escapeNotVerified */ echo $block->getLinkDesignPdp() ?>"
+       title="<?php echo $block->escapeHtml(__('Edit Design')); ?>">
+        <span>
+            <?php /* @escapeNotVerified */ echo __('Edit Design') ?>
+        </span>
+   </a>
+<?php endif ?>

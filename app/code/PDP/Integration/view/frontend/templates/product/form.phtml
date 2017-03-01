@@ -1,0 +1,16 @@
+<?php 
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+$_product = $block->getPdpProduct(); 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+?>
+<div class="product-add-form">
+	<form action="<?php /* @escapeNotVerified */ echo $block->getUrl('pdpintegration/cart/add', ['_current' => true, '_use_rewrite' => true]) ?>" id="pdp_postData" method="post" enctype="multipart/form-data" >	
+		<input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $_product->getProductId() ?>" />
+		<input type="hidden" name="pdp_product" value="<?php /* @escapeNotVerified */ echo $_product->getEntityId() ?>" />
+		<input type="hidden" name="qty" value="<?php /* @escapeNotVerified */ echo $_product->getQty() ?>" />
+		<input type="hidden" name="form_key" value="<?php /* @escapeNotVerified */ echo $objectManager->create("Magento\Framework\Data\Form\FormKey")->getFormKey() ?>" />
+		<button type="submit" title="Add to Cart" class="action primary tocart" id="productaddtocartbutton">
+                <span>continue to add cart</span>
+        </button>
+	</form>
+</div>

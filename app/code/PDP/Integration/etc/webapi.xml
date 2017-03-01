@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/pdpintegration/add" method="POST">
+        <service class="PDP\Integration\Api\PdpItemRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/pdpintegration/sum" method="POST">
+        <service class="PDP\Integration\Api\CalculatorInterface" method="sum"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>	
+</routes>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <head>
+        <css src="PDP_Integration::css/style.css" />
+    </head>	
+    <body>
+        <referenceContainer name="content">
+            <block class="PDP\Integration\Block\CustomProduct" name="customer_pdp_custom_product" template="account/cuspro.phtml" cacheable="false" >
+				<arguments>			
+					<argument name="columns" xsi:type="array">
+						<item name="product" xsi:type="string" translate="true">PRODUCT</item>
+						<item name="customdesign" xsi:type="string" translate="false">CUSTOMIZED DESIGN</item>
+						<item name="price" xsi:type="string" translate="false">PRICE</item>
+						<item name="status" xsi:type="string" translate="false">STATUS</item>
+					</argument>
+				</arguments>			
+				<block class="PDP\Integration\Block\Order\CustomProduct\Items\Renderer\DefaultRenderer" as="default" template="account/view/items/renderer/default.phtml">
+					<arguments>			
+						<argument name="columns" xsi:type="array">
+							<item name="product" xsi:type="string" translate="true">col-product</item>
+							<item name="customdesign" xsi:type="string" translate="false">col-custom-design</item>
+							<item name="price" xsi:type="string" translate="false">col-price</item>
+							<item name="status" xsi:type="string" translate="false">col-status</item>
+						</argument>
+					</arguments>					
+				</block>
+			</block>
+        </referenceContainer>	
+    </body>
+</page>

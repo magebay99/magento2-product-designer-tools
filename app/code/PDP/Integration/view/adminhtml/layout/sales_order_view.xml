@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="order_items">
+			<block class="PDP\Integration\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer" as="pdpro" template="order/view/items/renderer/default.phtml">
+				<arguments>
+					<argument name="columns" xsi:type="array">
+						<item name="product" xsi:type="string" translate="false">col-product</item>
+						<item name="status" xsi:type="string" translate="false">col-status</item>
+						<item name="price-original" xsi:type="string" translate="false">col-price-original</item>
+						<item name="price" xsi:type="string" translate="false">col-price</item>
+						<item name="qty" xsi:type="string" translate="false">col-ordered-qty</item>
+						<item name="subtotal" xsi:type="string" translate="false">col-subtotal</item>
+						<item name="tax-amount" xsi:type="string" translate="false">col-tax-amount</item>
+						<item name="tax-percent" xsi:type="string" translate="false">col-tax-percent</item>
+						<item name="discont" xsi:type="string" translate="false">col-discont</item>
+						<item name="total" xsi:type="string" translate="false">col-total</item>
+					</argument>
+				</arguments>
+			</block>
+		</referenceBlock>
+	</body>
+</page>

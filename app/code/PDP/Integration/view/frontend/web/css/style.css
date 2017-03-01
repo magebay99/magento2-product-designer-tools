@@ -1,0 +1,21 @@
+.page-title-wrapper h1.page-title{color:#67545A}
+.my-customized-design table.table-product-item th span{color:#FF0060}
+.my-customized-design table.table-product-item th.col-status{text-align:right;}
+.product-detail .block-info ul li{color:#313131}
+.product-detail .product-image{float:left;margin-right:17px;}
+.my-customized-design table.table-product-item td{color:#313131;}
+.my-customized-design table.table-product-item td .item-status{color:#00C0FF;font-size:16px;font-weight:bold;text-transform:capitalize}
+.block-button a.edit-button{width:128px;height:35px;color:#ffffff;background-color:#36DAAA;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
+ -webkit-border-radius: 3px; 
+ -moz-border-radius: 3px;
+ -o-border-radius: 3px;
+ border-radius: 3px;margin:18px 0 0;
+}
+.block-button a.zip-design{width:128px;height:35px;color:#ffffff;background-color:#00c0ff;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
+ -webkit-border-radius: 3px; 
+ -moz-border-radius: 3px;
+ -o-border-radius: 3px;
+ border-radius: 3px;margin:18px 0 0;
+}
+td.col-custom-design ul li.item{display:inline-block; margin:0 5px 5px 0;}
+td.col-custom-design ul li.last{margin-right:0;}

@@ -1,0 +1,23 @@
+<?php
+/**
+ */
+$helper = $this->helper('PDP\Integration\Helper\PdpOptions');
+$_product = $block->getProduct();
+$_sku = $_product->getSku();
+$link_edit = $helper->getLinkDesignPdp($_sku);
+?>
+<?php $buttonTitle = __('CUSTOMIZE IT'); ?>
+<?php //if ($_product->isSaleable()): ?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <div class="actions">
+            <a href="<?php echo $link_edit ?>" style="text-align:center;"
+                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
+                    class="action primary tocart">
+                <span><?php /* @escapeNotVerified */ echo $buttonTitle ?></span>
+            </a>
+            <?php echo $block->getChildHtml('', true) ?>
+        </div>
+    </div>
+</div>
+<?php //endif; ?>

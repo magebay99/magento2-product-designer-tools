@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Magento\Sales\Model\AdminOrder\Create" type="PDP\Integration\Model\Sales\AdminOrder\Create" />
+	<preference for="PDP\Integration\Api\PdpItemRepositoryInterface" type="PDP\Integration\Model\Pdpproduct\PdpItemRepository"/>
+	<preference for="PDP\Integration\Api\Data\PdpItemInterface" type="PDP\Integration\Model\PdpItem"/>
+	<preference for="PDP\Integration\Api\Data\ProductOptionInterface" type="PDP\Integration\Model\ProductOption" />
+	<preference for="PDP\Integration\Api\Data\ProductOptionValueInterface" type="PDP\Integration\Model\ProductOptionValue" />
+	<preference for="PDP\Integration\Api\Data\PdpReponseInterface" type="PDP\Integration\Model\Pdpproduct\PdpReponse" />
+	<preference for="PDP\Integration\Api\Data\PdpPrintTypeInterface" type="PDP\Integration\Model\Pdpproduct\PdpPrintType" />
+	<type name="Magento\Sales\Model\Config">
+        <plugin name="PDP_Integration_Model_Sales_Plugin_Config"
+                type="PDP\Integration\Model\Sales\Plugin\Config"
+                sortOrder="16"
+                disabled="false"/>
+    </type>	
+</config>

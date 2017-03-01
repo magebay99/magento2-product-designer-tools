@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/product_types.xsd">
+    <type name="pdpro" label="PDP" modelInstance="PDP\Integration\Model\Product\Type\Pdpro" isQty="true" indexPriority="30" sortOrder="50">
+        <customAttributes>
+            <attribute name="refundable" value="false"/>
+        </customAttributes>
+    </type>
+</config>

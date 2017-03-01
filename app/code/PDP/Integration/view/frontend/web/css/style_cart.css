@@ -1,0 +1,7 @@
+.block-button a.edit-button:hover{text-decoration:none;}
+.block-button a.edit-button{width:128px;height:35px;color:#ffffff;background-color:#36DAAA;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
+ -webkit-border-radius: 3px; 
+ -moz-border-radius: 3px;
+ -o-border-radius: 3px;
+ border-radius: 3px;margin:18px 0;
+}

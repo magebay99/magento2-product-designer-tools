@@ -1,0 +1,18 @@
+<?php
+/**
+*/
+?>
+<tr>
+	<?php 
+		$i = 0;
+		$columns = $block->getColumns();
+		$lastItemNumber = count($columns);
+		$_item = $block->getItem();
+		foreach ($columns as $columnName => $columnClass) {
+			$i++;
+	?>
+			<td <?php if($columnName == 'status') echo 'align="right"'; ?> class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, $columnName) ?></td>
+	<?php 
+		} 
+	?>
+</tr>

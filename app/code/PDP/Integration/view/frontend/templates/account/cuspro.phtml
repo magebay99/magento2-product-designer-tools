@@ -1,0 +1,109 @@
+<?php
+/**
+*/
+$orders = $block->getOrders();
+$columns = $block->getColumns();
+$lastItemNumber = count($columns);
+$_showhead = true;
+?>
+<div class="block account-nav">
+	<!--div class="title">
+		<strong><?php /* @escapeNotVerified */ //echo __('My Customized Products'); ?></strong>
+	</div-->
+	<div class="table-wrapper my-customized-design">
+		<table class="data table table-product-item">
+			<caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Customized Products') ?></caption>
+			<?php
+				foreach($orders as $_order) {
+					$orId = $_order->getEntityId();
+					$status = $_order->getStatus();
+					$j = 0;
+					$items = $_order->getItemsCollection();
+					foreach($items as $_item) {
+						//class $_item is Magento\Sales\Model\Order\Item
+						if ($_item->getParentItem() || $_item->getProductType() != 'pdpro') {
+							continue;
+						} else {
+							$j++;
+						}
+					?>
+					<?php if($j && $_showhead) { 
+						$_showhead = false; ?>
+						<thead>
+							<tr>
+								<?php $i = 0;
+								foreach ($columns as $columnName => $columnTitle):?>
+									<?php $i++; ?>
+									<th <?php if($columnName == 'status') echo 'align="right"'; ?> class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo __($columnTitle) ?></span></th>
+								<?php endforeach; ?>					
+							</tr>
+						</thead>					
+					<?php } ?>
+					<tbody class="<?php /* @noEscape */ echo $j%2 ? 'even' : 'odd' ?>">
+						<?php echo $block->getItemHtml($_item, $status) ?>
+					</tbody>
+					<?php
+					}
+				}
+			?>
+		</table>
+	</div>
+</div>
+<script>
+require([
+    'jquery',
+	'Magento_Ui/js/modal/alert',
+	'mage/translate'
+], function($, alert){
+    $(document).ready(function() {
+        $('.block-button a.zip-design').each(function(){
+			$(this).click(function(){
+				var url = $(this).data('href');
+				if(url != '#') {
+					$.ajax({
+						url: url,
+						type: 'GET',
+						beforeSend: function() {                  
+							$('body').trigger('processStart');                 
+						},
+						success : function(_res) {
+						    $('body').trigger('processStop');
+							var res = $.parseJSON(_res);
+							if(res.status == 'success') {
+								var data = res.data;
+								var url_download = data.baseUrl+''+data.file;
+								window.location.href = url_download;
+							}
+						},
+						error: function(xhr, ajaxOptions, thrownError){
+						   alert({
+								title: $.mage.__("!Error"),
+								content: thrownError,
+								autoOpen: true,
+								clickableOverlay: false,
+								focus: "",
+								actions: {
+									always: function(){										
+									}
+								}
+							});
+						}
+					});					
+				} else {
+				   alert({
+						title: $.mage.__("!Error"),
+						content: $.mage.__("can't zip design"),
+						autoOpen: true,
+						clickableOverlay: false,
+						focus: "",
+						actions: {
+							always: function(){
+							}
+						}
+					});
+				}
+			});
+		});
+    });	
+});
+</script>

@@ -1,0 +1,113 @@
+<?php
+namespace PDP\Integration\Block\Adminhtml\Order\View\Items\Renderer;
+
+use Magento\Sales\Model\Order\Item;
+
+class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer
+{
+    
+	/**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+	
+    /**
+	 * @param \PDP\Integration\Helper\PdpOptions
+	 */
+	protected $_pdpOptions;	
+	
+	/**
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\GiftMessage\Helper\Message $messageHelper
+     * @param \Magento\Checkout\Helper\Data $checkoutHelper
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
+        \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration,
+        \Magento\Framework\Registry $registry,
+        \Magento\GiftMessage\Helper\Message $messageHelper,
+        \Magento\Checkout\Helper\Data $checkoutHelper,
+		\Magento\Framework\ObjectManagerInterface $objectManager,
+		\PDP\Integration\Helper\PdpOptions $pdpOptions,
+        array $data = []
+    ) {
+        $this->_objectManager = $objectManager;
+        $this->_pdpOptions = $pdpOptions;
+        parent::__construct($context, $stockRegistry, $stockConfiguration, $registry, $messageHelper, $checkoutHelper, $data);
+    }
+	
+	/**
+	 * @param \Magento\Framework\DataObject|Item $item
+	 * @return string
+	 */
+	protected function getHtmlCustomDesign(\Magento\Framework\DataObject $item) {
+		$html = '';
+		$pdpCart = $this->_pdpOptions->getPdpCartItem($item->getQuoteItemId());
+		if(count($pdpCart)) {
+			$urlTool = $this->_pdpOptions->getUrlToolDesign();
+			$designId = $pdpCart[0]['design_id'];
+			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
+			if($pdpDesignJson->getDesignId()) {
+				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
+				$html = '<ul class="items">';
+				$i=0;
+				foreach($sideThubms as $sideThub) {
+					$i++;
+					$last = $i%2==0?'last':'';
+					$html .= '<li class="item '.$last.'"><img style="border:1px solid #C1C1C1;" width="143" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></li>';
+				}
+				$html .= '</ul>';
+			}
+		}
+		return $html;
+	}
+	
+    /**
+     * @param \Magento\Framework\DataObject|Item $item
+     * @param string $column
+     * @param null $field
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function getColumnHtml(\Magento\Framework\DataObject $item, $column, $field = null)
+    {
+        $html = '';
+        switch ($column) {
+            case 'product':
+                if ($this->canDisplayContainer()) {
+                    $html .= '<div id="' . $this->getHtmlId() . '">';
+                }
+                $html .= $this->getColumnHtml($item, 'name');
+				$html .= $this->getHtmlCustomDesign($item);
+                if ($this->canDisplayContainer()) {
+                    $html .= '</div>';
+                }
+                break;
+            case 'status':
+                $html = $item->getStatus();
+                break;
+            case 'price-original':
+                $html = $this->displayPriceAttribute('original_price');
+                break;
+            case 'tax-amount':
+                $html = $this->displayPriceAttribute('tax_amount');
+                break;
+            case 'tax-percent':
+                $html = $this->displayTaxPercent($item);
+                break;
+            case 'discont':
+                $html = $this->displayPriceAttribute('discount_amount');
+                break;
+            default:
+                $html = parent::getColumnHtml($item, $column, $field);
+        }
+        return $html;
+    }	
+}

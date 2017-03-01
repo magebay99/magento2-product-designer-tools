@@ -1,0 +1,17 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<!--head>
+		<css src="PDP_Integration::css/pdp.css" />
+	</head-->
+	<body>
+		<referenceBlock name="product.info.addtocart">
+			<action method='setTemplate'>
+				<argument name="template" xsi:type="string">PDP_Integration::product/view/addtocart.phtml</argument>
+			</action>
+		</referenceBlock>
+		<referenceBlock name="product.info">
+			<action method='setTemplate'>
+				<argument name="template" xsi:type="string">PDP_Integration::product/view/form.phtml</argument>
+			</action>
+		</referenceBlock>	
+	</body>
+</page>
