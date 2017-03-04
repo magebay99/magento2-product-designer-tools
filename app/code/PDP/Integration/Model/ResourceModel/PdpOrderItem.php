@@ -1,7 +1,8 @@
 <?php
 namespace PDP\Integration\Model\ResourceModel;
 
-class PdpProductType extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb {
+class PdpOrderItem extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
 	
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
@@ -32,6 +33,6 @@ class PdpProductType extends \Magento\Framework\Model\ResourceModel\Db\AbstractD
      */
     protected function _construct()
     {
-        $this->_init('pdp_product_type', 'type_id');
+        $this->_init('pdp_order_item', 'item_id');
     }
 }

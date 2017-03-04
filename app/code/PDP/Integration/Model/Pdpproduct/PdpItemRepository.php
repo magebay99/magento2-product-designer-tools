@@ -132,14 +132,17 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						$pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdp_option_data);
 						$infoRequest = $this->_pdpOptions->getOptInfoRquest($pdpOptSelect);
 						$additionalOptions = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
+						$dataOpt['pdp_options'] = $pdpOptSelect;
 					} else {
 						$additionalOptions = array();
 						$infoRequest = array();
 					}
-					if(count($pdp_print_type)) {
+					if(isset($pdp_print_type) && count($pdp_print_type)) {
 						$printType = array('label' => 'Print type', 'value' => '');
 						$printType['value'] = $pdp_print_type['title'];
-						if(isset($pdp_print_type['price'])) $printTypePrice = $pdp_print_type['price'];
+						if(isset($pdp_print_type['price'])){
+							$printTypePrice = $pdp_print_type['price'];
+						}
 						$printTypeValue = $pdp_print_type['value'];
 						$additionalOptions[] = $printType;
 						if(isset($printTypeValue)) {
@@ -168,6 +171,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 									$data = array(
 										'item_id' => $itemId,
 										'product_id' => $itembypro->getProductId(),
+										'pdp_product_id' => $pdpItem->getEntityId(),
 										'sku' => $pdpItem->getSku(),
 										'store_id' => $itembypro->getStoreId(),
 										'value' => serialize($dataOpt)
@@ -185,10 +189,10 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 									$modelPdpquote->addData($data);
 									$modelPdpquote->save();									
 								}
-							}						
+							}
 						} catch(\Magento\Framework\Exception\LocalizedException $e) {
 							$reponse->setStatus(false)
-									->setMessage(nl2br($e->getMessage()));	
+									->setMessage(nl2br($e->getMessage()));
 						}
 					} catch(\Magento\Framework\Exception\LocalizedException $e) {
 						$reponse->setStatus(false)
@@ -200,8 +204,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 							->setStatus(true)
 							->setMessage('add product success');				
 				} else {
-					$reponse->setUrl('')
-							->setStatus(false)
+					$reponse->setStatus(false)
 							->setMessage('product add is not exists');
 				}
 			} else {
@@ -209,8 +212,8 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						->setMessage('post data failed');
 			}			
 		} else {
-				$reponse->setStatus(false)
-						->setMessage('post data failed');			
+			$reponse->setStatus(false)
+					->setMessage('post data failed, PDP Integration is not enable');
 		}
 		return $reponse;
 	}	

@@ -49,7 +49,13 @@ class InstallSchema implements InstallSchemaInterface {
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
             ['unsigned' => true],
-            'Product Id'
+            'Product Id magento'
+        )->addColumn(
+            'pdp_product_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true],
+            'Product Id P+'
         )->addColumn(
             'design_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
@@ -94,6 +100,41 @@ class InstallSchema implements InstallSchemaInterface {
         );
 		$installer->getConnection()->createTable($table);
 		
+        /**
+         * Create table 'pdp_order_relation'
+         */
+        $table = $installer->getConnection()->newTable(
+            $installer->getTable('pdp_order_relation')
+        )->addColumn(
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+            'Entity Id'
+        )->addColumn(
+            'order_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true, 'nullable' => false],
+            'Order Id'
+        )->addColumn(
+            'pdp_order_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true, 'nullable' => false],
+            'PDP Order Id'
+        )->addIndex(
+            $installer->getIdxName('pdp_order_relation', ['order_id']),
+            ['order_id']
+        )->addForeignKey(
+            $installer->getFkName('pdp_order_relation', 'order_id', 'sales_order', 'entity_id'),
+            'order_id',
+            $installer->getTable('sales_order'),
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        )->setComment(
+            'pdp Order Relation'
+        );
         /**
          * Create table 'pdp_product'
          */

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Email Creditmemo Items List" design_abstraction="custom">
+	<body>
+        <referenceBlock name="sales.email.order.renderers">
+            <block class="PDP\Integration\Block\Order\Email\Items\Order\DefaultOrder" as="pdpro" template="email/items/order/default.phtml"/>
+        </referenceBlock>
+	</body>
+</page>

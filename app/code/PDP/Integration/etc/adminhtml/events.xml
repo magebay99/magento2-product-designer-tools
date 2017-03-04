@@ -7,4 +7,7 @@
 	<event name="sales_quote_product_add_after">
 		<observer name="pdp_sales_quote_product_add_after" instance="PDP\Integration\Observer\Adminhtml\PdpQuoteProductAdd" />
 	</event>
+	<event name="sales_order_save_after">
+		<observer name="pdp_sales_order_save_after" instance="PDP\Integration\Observer\Adminhtml\PdpSalesOrder" />
+	</event>
 </config>

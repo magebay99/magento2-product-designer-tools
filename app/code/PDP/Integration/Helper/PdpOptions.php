@@ -37,6 +37,8 @@ class PdpOptions extends AbstractHelper {
 	 */
 	protected $_objectmanager;
 	
+	protected $array_type_select;
+	
 	
     /**
      * 
@@ -61,6 +63,7 @@ class PdpOptions extends AbstractHelper {
 		$this->_pdpConfig = $pdpConfig;
 		$this->_objectmanager = $objectmanager;
 		$this->pdpquoteCollectionFactory = $pdpquoteCollectionFactory;
+		$this->array_type_select = array('drop_down','radio','checkbox','multiple','hidden');
 	}
 
     /**
@@ -183,20 +186,19 @@ class PdpOptions extends AbstractHelper {
     }
 	
 	/**
-    * @param array $options
-	*
-	* @return array()
-    */		
+     * @param array $options
+	 *
+	 * @return array()
+     */		
     public function getOptInfoRquest($options) {
 		$infoRequest = array(
 			'pdp_options' => array(),
 			'pdp_price' => 0
 		);
 		$pdpPrice = 0;
-		$array_type_select = array('drop_down','radio','checkbox','multiple','hidden');
 		foreach($options as $key => $val) {
 			$optId = $val['option_id'];
-			if(in_array($val['type'],$array_type_select)) {
+			if(in_array($val['type'],$this->array_type_select)) {
 				$qty_input = false;
 				$value = array();
 				if($val['qnty_input']) {
@@ -227,19 +229,18 @@ class PdpOptions extends AbstractHelper {
 	}
 	
 	/**
-    * @param array $options
-	*
-	* @return array()
-    */	
+     * @param array $options
+	 *
+	 * @return array()
+     */	
 	public function getAdditionOption($options) {
-		$array_type_select = array('drop_down','radio','checkbox','multiple','hidden');
 		$additionalOptions = array();
 		foreach($options as $key => $val) {
 			$item = array(
 				'label' => $val['title'],
 				'value' => ''
 			);
-			if(in_array($val['type'],$array_type_select)) {
+			if(in_array($val['type'],$this->array_type_select)) {
 				$value = array();
 				foreach($val['values'] as $_key => $_val) {
 					if(intval($_val['checked']) && $_val['selected'] && !$_val['disabled']) {
@@ -260,28 +261,33 @@ class PdpOptions extends AbstractHelper {
 	}
 	
 	/**
-    * @param array $options
-	*
-	* @return array()
-    */		
+     * @param array $options
+	 *
+	 * @return array()
+     */		
 	public function getOptionsSelect($options) {
 		$result = array();
-		$array_type_select = array('drop_down','radio','checkbox','multiple','hidden');
+		$_key = 0;
 		foreach($options as $key => $val) {
 			if(!$val['disabled']) {
-				if(in_array($val['type'],$array_type_select)) {
+				if(in_array($val['type'],$this->array_type_select)) {
 					$flag=false;
+					$optVal = array();
 					foreach($val['values'] as $opt_key => $opt_val) {
 						if(intval($opt_val['checked']) && $opt_val['selected'] && !$opt_val['disabled']) {
+							$optVal[] = $opt_val;
 							$flag = true;
 						}
 					}
 					if($flag) {
-						$result[] = $val;
+						$result[$_key] = $val;
+						$result[$_key]['values'] = $optVal;
+						$_key++;
 					}
 				} elseif($val['type'] == 'field' || $val['type'] == 'area') {
 					if($val['default_text']) {
-						$result[] = $val;
+						$result[$_key] = $val;
+						$_key++;
 					}
 				} elseif($val['type'] == 'file') {
 					
@@ -292,10 +298,10 @@ class PdpOptions extends AbstractHelper {
 	}
 	
     /**
-    * @param int $itemId
-	*
-	* @return array()
-    */		
+     * @param int $itemId
+	 *
+	 * @return array()
+     */		
 	public function getPdpCartItem($itemId) {
 		$optValue = array();
 		if($itemId) {
@@ -306,10 +312,10 @@ class PdpOptions extends AbstractHelper {
 	}
 	
     /**
-    * @param int $itemId
-	*
-	* @return \PDP\Integration\Model\Pdpquote | null
-    */	
+     * @param int $itemId
+	 *
+	 * @return \PDP\Integration\Model\Pdpquote | null
+     */	
 	protected function __getPdpCartItem($itemId) {
 		$itemData = null;
 		if($itemId) {
@@ -317,5 +323,89 @@ class PdpOptions extends AbstractHelper {
 				 ->addFieldToFilter('item_id', array('eq' => $itemId));
 		}
 		return $itemData;
+	}
+	
+	/**
+	 * @param array $options
+	 * @param int $itemQty
+	 * @return array
+	 */
+	public function prepareDataOptValue(array $options, $itemQty) {
+		$result = array();
+		$storeId = $this->_storeManager->getStore()->getId();
+		$result['options'] = array();
+		$result['price'] = 0;
+		foreach($options as $key => $val) {
+			$item = array();
+			$item['option_id'] = $val['option_id'];
+			$item['option_type'] = $val['type'];
+			if(in_array($val['type'], $this->array_type_select)) {
+				$item['label'] = $val['title'];
+				if($val['type'] != 'checkbox' && $val['type'] != 'multiple') {
+					foreach($val['values'] as $_key => $_val) {
+						if(intval($_val['checked']) && $_val['selected'] && !$_val['disabled']) {
+							if($_val['price']) {
+								$item['value'] = $_val['qty'] . ' x ' .$_val['title']. ' - '.$this->getConvertedPrice($_val['price'], $storeId);
+								$result['price'] = $result['price'] + $_val['qty']*$_val['price'];
+							} else {
+								$item['value'] = $_val['qty'] . ' x ' .$_val['title'];
+							}
+							$item['option_value'] = $_val['option_type_id'];
+							break;
+						}
+					}
+				} elseif($val['type'] == 'checkbox' || $val['type'] == 'multiple') {
+					$itemValue = array();
+					$itemOptionValue = array();
+					foreach($val['values'] as $_key => $_val) {
+						$__qty = $__val['qty']*$itemQty;
+						if(intval($_val['checked']) && $_val['selected'] && !$_val['disabled']) {
+							if($_val['price']) {
+								$itemValue[] = $__qty.' x '.$_val['title'].' - '.$this->getConvertedPrice($_val['price'], $storeId);
+								$result['price'] = $result['price'] + $_val['qty']*$_val['price'];
+							} else {
+								$itemValue[] = $__qty.' x '.$_val['title'];
+							}
+							$itemOptionValue[] = $_val['option_type_id'];
+						}
+					}
+					$item['value'] = implode(',&nbsp', $itemValue);
+					$item['option_value'] = implode(',', $itemOptionValue);
+				}
+			} elseif($val['type'] == 'field' || $val['type'] == 'area') {
+				if($val['price']) {
+					$item['label'] = $itemQty .' x '.$val['title'].' - '.$this->getConvertedPrice($val['price'], $storeId);
+					$result['price'] = $result['price'] + $val['price'];
+				} else {
+					$item['label'] = $val['title'];
+				}
+				$item['value'] = $val['default_text'];
+				$item['option_value'] = $val['default_text'];
+			} elseif($val['type'] == 'file') {
+				
+			}
+			$result['options'][] = $item;
+		}
+		return $result;
+	}
+	
+	/**
+	 * @param array $printType
+	 * @return array
+	 */
+	public function prepareDataPrintType(array $printType) {
+		$result = array(
+			'print_type' => array()
+		);
+		if(isset($printType['title'])) {
+			$result['print_type']['name'] = $printType['title'];
+		}
+		if(isset($printType['value'])) {
+			$result['print_type']['id'] = $printType['value'];
+		}
+		if(isset($printType['price'])) {
+			$result['print_type']['cost'] = $printType['price'];
+		}
+		return $result;
 	}
 }

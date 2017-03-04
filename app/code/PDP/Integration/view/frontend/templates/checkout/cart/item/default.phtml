@@ -9,7 +9,7 @@ $isVisibleProduct = $product->isVisibleInSiteVisibility();
 /** @var \Magento\Msrp\Helper\Data $helper */
 $helper = $this->helper('Magento\Msrp\Helper\Data');
 $_helper = $this->helper('PDP\Integration\Helper\PdpOptions');
-$_sku = $_item->getSku();
+$itemId = $_item->getItemId();
 $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
 ?>
 <tbody class="cart item">
@@ -62,7 +62,7 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                     <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
                 <?php endif;?>
 				<div class="block-button">
-					<a class="edit-button" href="<?php echo $_helper->getLinkDesignPdp($_sku)?>"><?php echo __('Edit Design')?></a>
+					<a class="edit-button" href="<?php echo $_helper->getLinkDesignPdpWithItemId($itemId)?>"><?php echo __('Edit Design')?></a>
 				</div>
             </div>
         </td>

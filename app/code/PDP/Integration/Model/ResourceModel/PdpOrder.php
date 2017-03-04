@@ -1,11 +1,9 @@
 <?php
 namespace PDP\Integration\Model\ResourceModel;
- 
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
- 
-class Pdpproduct extends AbstractDb
-{
 
+class PdpOrder extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+	
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
@@ -28,13 +26,16 @@ class Pdpproduct extends AbstractDb
     }
 	
     /**
-     * Define main table
+     * Initialize resource model
+     * Get tablename from config
+     *
+     * @return void
      */
     protected function _construct()
     {
-        $this->_init('pdp_product', 'entity_id');
+        $this->_init('pdp_order', 'order_id');
     }
-	
+
     /**
      * Process data before saving
      *
