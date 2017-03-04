@@ -1,37 +1,40 @@
 <?php
-namespace PDP\Integration\Model\ResourceModel;
+namespace PDP\Integration\Model;
 
-class PdpProductType extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb {
-	
-    /**
-     * @var \Magento\Framework\Stdlib\DateTime\DateTime
-     */
-    protected $_date;
+use Magento\Framework\Model\Context;
+
+class PdpProductType extends \Magento\Framework\Model\AbstractModel {
     
 	/**
-     * Construct
-     *
-     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
-     * @param string|null $resourcePrefix
+     * Define resource model
+	 * @param Magento\Framework\Registry $coreRegistry
      */
     public function __construct(
-        \Magento\Framework\Model\ResourceModel\Db\Context $context,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        $resourcePrefix = null
-    ) {
-        $this->_date = $date;
-        parent::__construct($context, $resourcePrefix);
+        \Magento\Framework\Registry $coreRegistry,
+        Context $context
+    )
+    {
+        parent::__construct($context, $coreRegistry);
     }
-	
-    /**
+	/**
      * Initialize resource model
-     * Get tablename from config
      *
      * @return void
      */
     protected function _construct()
     {
-        $this->_init('pdp_product_type', 'type_id');
+        $this->_init('PDP\Integration\Model\ResourceModel\PdpProductType');
     }
+	
+	/**
+	 * @param string $sku
+	 * @return array
+	 */
+	public function getProductWithSku($sku){
+		$collection = $this->getCollection();
+		$collection->addFieldToSelect(array('*'))
+				   ->addFieldToFilter('sku',array('eq' => $sku))
+		           ->setCurPage(1);
+		return $collection;
+	}
 }
