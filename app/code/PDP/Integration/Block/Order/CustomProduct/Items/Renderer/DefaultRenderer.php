@@ -166,9 +166,11 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 				$html = '<ul class="items">';
 				$i=0;
 				foreach($sideThubms as $sideThub) {
-					$i++;
-					$last = $i%2==0?'last':'';
-					$html .= '<li class="item '.$last.'"><img style="border:1px solid #C1C1C1;" width="143" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></li>';
+					if($sideThub['thumb']) {
+						$i++;
+						$last = $i%2==0?'last':'';
+						$html .= '<li class="item '.$last.'"><img style="border:1px solid #C1C1C1;" width="143" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></li>';
+					}
 				}
 				$html .= '</ul>';
 			}

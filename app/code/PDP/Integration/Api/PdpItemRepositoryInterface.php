@@ -1,9 +1,8 @@
 <?php
-
 namespace PDP\Integration\Api;
 
 /**
- * Interface for managing guest shipping address information
+ * Interface for managing pdp item information
  * @api
  */
 interface PdpItemRepositoryInterface {

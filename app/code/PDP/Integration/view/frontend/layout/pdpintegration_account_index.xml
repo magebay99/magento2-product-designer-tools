@@ -16,7 +16,7 @@
 						<item name="status" xsi:type="string" translate="false">STATUS</item>
 					</argument>
 				</arguments>			
-				<block class="PDP\Integration\Block\Order\CustomProduct\Items\Renderer\DefaultRenderer" as="default" template="account/view/items/renderer/default.phtml">
+				<block class="PDP\Integration\Block\Order\CustomProduct\Items\Renderer\DefaultRenderer" as="pdpro" template="account/view/items/renderer/default.phtml">
 					<arguments>			
 						<argument name="columns" xsi:type="array">
 							<item name="product" xsi:type="string" translate="true">col-product</item>

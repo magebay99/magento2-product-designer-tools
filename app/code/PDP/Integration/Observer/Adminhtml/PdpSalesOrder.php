@@ -11,12 +11,20 @@ class PdpSalesOrder implements  ObserverInterface{
     protected $_objectManager;
 	
     /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;	
+	
+    /**
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      */
     public function __construct(
-		\Magento\Framework\ObjectManagerInterface $objectManager
+		\Magento\Framework\ObjectManagerInterface $objectManager,
+		\Magento\Framework\Message\ManagerInterface $messageManager
     ) {
         $this->_objectManager = $objectManager;
+        $this->messageManager = $messageManager;
     }
     
 	/**
@@ -29,7 +37,7 @@ class PdpSalesOrder implements  ObserverInterface{
 	public function execute(\Magento\Framework\Event\Observer $observer) {
 		$order = $observer->getEvent()->getOrder();
 		$status = $order->getState();
-		if($status == 'complete') {
+		if($status == 'complete' || $status == 'closed') {
 			$orderId = $order->getEntityId();
 			$pdpOrderRelation = $this->_objectManager->get('PDP\Integration\Model\PdpOrderRelationFactory')->create();
 			$pdpOrder = $this->_objectManager->get('PDP\Integration\Model\PdpOrderFactory')->create();
@@ -44,9 +52,7 @@ class PdpSalesOrder implements  ObserverInterface{
 						try {
 							$_data->setOrderStatus($status)->save();
 						} catch(\Exception $e) {
-							throw new \Magento\Framework\Exception\LocalizedException(
-								new \Magento\Framework\Phrase($e->getMessage())
-							);
+							$this->messageManager->addException($e, __('Update pdp order error'));
 						}
 					}
 				}

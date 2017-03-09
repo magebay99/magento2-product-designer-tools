@@ -135,6 +135,57 @@ class InstallSchema implements InstallSchemaInterface {
         )->setComment(
             'pdp Order Relation'
         );
+		
+        /**
+         * Create table 'pdp_guest_design'
+         */
+		$table = $installer->getConnection()->newTable(
+            $installer->getTable('pdp_guest_design')
+        )->addColumn(
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+            'Entity Id'
+        )->addColumn(
+            'customer_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true],
+            'Customer Id'
+        )->addColumn(
+            'is_active',
+            \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+            null,
+            ['unsigned' => true, 'default' => '1'],
+            'Is Active'
+        )->addColumn(
+            'customer_is_guest',
+            \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+            null,
+            ['unsigned' => true, 'default' => '0'],
+            'Customer Is Guest'
+        )->addColumn(
+            'item_value',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            '64k',
+            [],
+            'Item Value'
+        )->addColumn(
+            'created_at',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+            null,
+            ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+            'Created At'
+        )->addColumn(
+            'updated_at',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+            null,
+            ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_UPDATE],
+            'Updated At'
+        )->setComment(
+            'pdp Guest Custom Design'
+        );
         /**
          * Create table 'pdp_product'
          */

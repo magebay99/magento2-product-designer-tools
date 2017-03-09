@@ -8,8 +8,8 @@
             <resource ref="anonymous" />
         </resources>
     </route>
-    <route url="/V1/pdpintegration/sum" method="POST">
-        <service class="PDP\Integration\Api\CalculatorInterface" method="sum"/>
+    <route url="/V1/pdpintegration/guest-design" method="POST">
+        <service class="PDP\Integration\Api\PdpGuestDesignRepositoryInterface" method="save"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>

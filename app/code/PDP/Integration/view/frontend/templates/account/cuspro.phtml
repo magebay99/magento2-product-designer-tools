@@ -5,6 +5,7 @@ $orders = $block->getOrders();
 $columns = $block->getColumns();
 $lastItemNumber = count($columns);
 $_showhead = true;
+$guestDesign = $block->getProductGuestDesign();
 ?>
 <div class="block account-nav">
 	<!--div class="title">
@@ -14,7 +15,7 @@ $_showhead = true;
 		<table class="data table table-product-item">
 			<caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Customized Products') ?></caption>
 			<?php
-				foreach($orders as $_order) {
+				foreach($orders as $_or_key => $_order) {
 					$orId = $_order->getEntityId();
 					$status = $_order->getStatus();
 					$j = 0;
@@ -44,6 +45,78 @@ $_showhead = true;
 					</tbody>
 					<?php
 					}
+				}
+			?>
+			<?php 
+				$_j = 0;
+				foreach($guestDesign as $guestItem) {
+					if(isset($guestItem['product_id']) && isset($guestItem['design_id']) && isset($guestItem['pdp_product_id'])) {
+						$_j++;
+						$_product = $block->getProductWithId($guestItem['product_id']);
+						$_design = $block->getDesignWithId($guestItem['design_id']);
+					}
+					if($_j && $_showhead) {
+						$_showhead = false;
+					?>
+						<thead>
+							<tr>
+								<?php $_i = 0;
+								foreach ($columns as $columnName => $columnTitle):?>
+									<?php $_i++; ?>
+									<th <?php if($columnName == 'status') echo 'align="right"'; ?> class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($_i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo __($columnTitle) ?></span></th>
+								<?php endforeach; ?>					
+							</tr>
+						</thead>						
+					<?php
+						}
+						if($_j) {
+					?>
+					<tbody class="<?php /* @noEscape */ echo $_j%2 ? 'even' : 'odd' ?>">
+						<tr>
+							<td class="col-product">
+								<div class="product-detail">
+									<div class="product-image">
+										<img width="207" src="<?php echo $block->getImageProduct($_product)?>" alt="" />
+									</div>
+									<div class="block-info" style="float:left;">
+										<ul class="items">
+											<li><?php /* @noEscape */ echo $_product->getName() ?></li>
+											<li><?php /* @noEscape */ echo __('SKU: ') ?><?php /* @noEscape */ echo $_product->getSku() ?></li>
+										</ul>
+									</div>
+								</div>
+							</td>
+							<td class="col-custom-design">
+								<ul class="items">
+									<?php
+										$_i = 0;
+										foreach($_design as $sideThub) {
+											if($sideThub['thumb']) {	
+											$_last = $_i%2==0?'last':'';
+									?>
+											<li class="item <?php echo $_last ?>"><img style="border:1px solid #C1C1C1;" width="143" src="<?php echo $block->getUrlToolDesign().'/'.$sideThub['thumb'] ?>" alt="" /></li>
+									<?php 
+											} 
+										} 
+									?>
+								</ul>
+							</td>
+							<td class="col-price">
+								<span class="box-price">
+									<span class="item-price"><?php /* @noEscape */ echo $block->getPriceHtml($_product) ?></span>
+								</span>
+							</td>
+							<td align="right" class="col-status last">
+								<span class="item-status"><?php /* @noEscape */ echo __('Pending') ?></span>
+								<div class="block-button">
+									<a class="zip-design" href="javascript:void(0)" data-href="<?php echo $block->getLinkZipDesign($guestItem['design_id']) ?>"><?php echo __('Zip Design') ?></a>
+									<a class="edit-button" href="<?php echo $block->getLinkEdit($guestItem['design_id'], $guestItem['pdp_product_id']) ?>"> <?php echo __('Edit Design') ?></a>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+					<?php
+						}
 				}
 			?>
 		</table>
@@ -76,6 +149,7 @@ require([
 							}
 						},
 						error: function(xhr, ajaxOptions, thrownError){
+							$('body').trigger('processStop');
 						   alert({
 								title: $.mage.__("!Error"),
 								content: thrownError,

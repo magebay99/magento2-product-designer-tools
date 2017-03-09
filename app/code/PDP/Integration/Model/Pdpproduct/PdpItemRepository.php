@@ -193,10 +193,12 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						} catch(\Magento\Framework\Exception\LocalizedException $e) {
 							$reponse->setStatus(false)
 									->setMessage(nl2br($e->getMessage()));
+							return $reponse;
 						}
 					} catch(\Magento\Framework\Exception\LocalizedException $e) {
 						$reponse->setStatus(false)
 								->setMessage(nl2br($e->getMessage()));
+						return $reponse;
 					}
 					$this->_pdpIntegrationSession->setPdpCheckoutCart(1);
 					$url = $this->urlBuilder->getUrl('checkout/cart');

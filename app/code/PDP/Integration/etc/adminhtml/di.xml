@@ -4,4 +4,16 @@
 	<!--type name="Magento\Sales\Block\Adminhtml\Items\Column\DefaultColumn">
 		<plugin name="pdp_item_data_options" type="PDP\Integration\Block\Adminhtml\Items\Column\Plugin\DefaultColumn" />
 	</type-->
+	<preference for="Magento\Sales\Model\Order\Pdf\Invoice" type="PDP\Integration\Model\Sales\Order\Pdf\Invoice" />
+	<preference for="Magento\Sales\Model\Order\Pdf\Shipment" type="PDP\Integration\Model\Sales\Order\Pdf\Shipment" />
+	<preference for="Magento\Sales\Model\Order\Pdf\Creditmemo" type="PDP\Integration\Model\Sales\Order\Pdf\Creditmemo" />
+	<type name="PDP\Integration\Model\Sales\Order\Pdf\Items\Invoice">
+		<plugin name="pdp_sales_order_item_invoice" type="PDP\Integration\Plugin\Sales\Order\Items\Invoice" />
+	</type>
+	<type name="PDP\Integration\Model\Sales\Order\Pdf\Items\Shipment">
+		<plugin name="pdp_sales_order_item_shipment" type="PDP\Integration\Plugin\Sales\Order\Items\Shipment" />
+	</type>
+	<type name="PDP\Integration\Model\Sales\Order\Pdf\Items\Creditmemo">
+		<plugin name="pdp_sales_order_item_shipment" type="PDP\Integration\Plugin\Sales\Order\Items\Creditmemo" />
+	</type>
 </config>

@@ -38,6 +38,26 @@ class PdpQuoteManagement implements ObserverInterface {
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
+
+	/**
+     * @var \PDP\Integration\Model\PdpGuestDesignFactory
+     */
+    protected $_pdpGuestDesignFactory;
+
+	/**
+     * @var \PDP\Integration\Model\Session
+     */
+    protected $_pdpIntegrationSession;
+
+	/**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_customerSession;
+	
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;	
 	
     /**
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -47,6 +67,10 @@ class PdpQuoteManagement implements ObserverInterface {
      * @param \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInformation
 	 * @param \Magento\Framework\ObjectManagerInterface $objectManager
 	 * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
+	 * @param \PDP\Integration\Model\PdpGuestDesignFactory $pdpGuestDesignFactory
+	 * @param \PDP\Integration\Model\Session $pdpIntegrationSession
+	 * @param \Magento\Customer\Model\Session $customerSession
+	 * @param \Magento\Framework\Message\ManagerInterface $messageManager
      */
     public function __construct(
 		\Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -55,7 +79,11 @@ class PdpQuoteManagement implements ObserverInterface {
 		\PDP\Integration\Model\PdpOrderRelationFactory $pdpOrderRelationFactory,
 		\Magento\Directory\Api\CountryInformationAcquirerInterface $countryInformation,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
-        \PDP\Integration\Helper\PdpOptions $pdpOptions
+        \PDP\Integration\Helper\PdpOptions $pdpOptions,
+		\PDP\Integration\Model\PdpGuestDesignFactory $pdpGuestDesignFactory,
+		\PDP\Integration\Model\Session $pdpIntegrationSession,
+		\Magento\Customer\Model\Session $customerSession,
+		\Magento\Framework\Message\ManagerInterface $messageManager
     ) {
         $this->storeManager = $storeManager;
         $this->_pdpOrderFactory = $pdpOrderFactory;
@@ -64,6 +92,10 @@ class PdpQuoteManagement implements ObserverInterface {
         $this->countryInformation = $countryInformation;
         $this->_objectManager = $objectManager;
 		$this->_pdpOptions = $pdpOptions;
+		$this->_pdpGuestDesignFactory = $pdpGuestDesignFactory;
+		$this->_pdpIntegrationSession = $pdpIntegrationSession;
+		$this->_customerSession = $customerSession;
+		$this->messageManager = $messageManager;
     }
 	
     /**
@@ -197,7 +229,6 @@ class PdpQuoteManagement implements ObserverInterface {
 				$dataOrder['status'] = $order->getState();
 			}
 			if($order->getSubtotal()) {
-				//$dataOrder['subtotal'] = $order->getSubtotal();
 				$dataOrder['subtotal'] = $pdpOrderTotal;
 			}
 			if($order->getShippingAmount()) {
@@ -207,7 +238,6 @@ class PdpQuoteManagement implements ObserverInterface {
 				$dataOrder['tax_amount'] = $order->getTaxAmount();
 			}
 			if($order->getGrandTotal()) {
-				//$dataOrder['grandtotal'] = $order->getGrandTotal();
 				$dataOrder['grandtotal'] = $pdpOrderTotal;
 				if(isset($dataOrder['shipping'])) {
 					$dataOrder['grandtotal'] += $dataOrder['shipping'];
@@ -220,7 +250,35 @@ class PdpQuoteManagement implements ObserverInterface {
 				$dataOrder['order_id'] = $orderId;
 			}
 			$_dataOrderItems = $_dataOrderItem;
-			$this->saveInfoOrderPdp($billingAddress, $_dataOrderItems, $dataOrder);			
+			$this->saveInfoOrderPdp($billingAddress, $_dataOrderItems, $dataOrder);
+			if($this->_customerSession->isLoggedIn()) {
+				$customerId = $this->_customerSession->getCustomerId();
+				if($customerId) {
+					try{
+						$this->_pdpGuestDesignFactory->create()
+							  ->loadByCustomerId($customerId)
+							  ->setIsActive(0)
+							  ->save();
+						$this->_pdpIntegrationSession->setPdpDesignId(null);
+					} catch(\Exception $e) {
+						$this->messageManager->addException($e, __('Update guest design error'));
+					}
+				}
+
+			} else {
+				$pdpGuestDesignId = $this->_pdpIntegrationSession->getPdpDesignId();
+				if($pdpGuestDesignId) {
+					try{
+						$this->_pdpGuestDesignFactory->create()
+							  ->load($pdpGuestDesignId)
+							  ->setIsActive(0)
+							  ->save();
+						$this->_pdpIntegrationSession->setPdpDesignId(null);
+					} catch(\Exception $e) {
+						$this->messageManager->addException($e, __('Update guest design error'));
+					}
+				}
+			}
 		}		
 		return $this;
 	}
@@ -285,9 +343,7 @@ class PdpQuoteManagement implements ObserverInterface {
 				$modelPdporder->addData($dataPdpOrder)->save();
 				$orderId = $modelPdporder->getOrderId();
 			} catch(\Exception $e) {
-				throw new \Magento\Framework\Exception\LocalizedException(
-					new \Magento\Framework\Phrase($e->getMessage())
-				);
+				$this->messageManager->addException($e, __('Update pdp order error'));
 			}
 		}
 		if(isset($dataOrder['order_id'])) {
@@ -299,9 +355,7 @@ class PdpQuoteManagement implements ObserverInterface {
 			try{
 				$modelpdpOrderRelation->addData($dataPdpOrderRelation)->save();
 			} catch(\Exception $e) {
-				throw new \Magento\Framework\Exception\LocalizedException(
-					new \Magento\Framework\Phrase($e->getMessage())
-				);
+				$this->messageManager->addException($e, __('Update pdp order relation error'));
 			}
 		}
 		if(count($_dataOrderItems) && isset($orderId)) {
@@ -316,9 +370,7 @@ class PdpQuoteManagement implements ObserverInterface {
 					try{
 						$modelPdporderItem[$i]->addData($dataOrderItem)->save();
 					} catch(\Exception $e) {
-						throw new \Magento\Framework\Exception\LocalizedException(
-							new \Magento\Framework\Phrase($e->getMessage())
-						);
+						$this->messageManager->addException($e, __('Update pdp order item error'));
 					}
 				}
 				$i++;
