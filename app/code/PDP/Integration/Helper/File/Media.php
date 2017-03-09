@@ -78,7 +78,7 @@ class Media extends AbstractHelper{
 		$url = $this->_objectmanager->get('PDP\Integration\Helper\PdpOptions')->getUrlToolDesign();
 		$pdpFolder = parse_url($url);
 		$destDir = $this->_writeFactory->create(realpath('pub/media/pdp/mydesign'));
-		$tmpPath = $this->_writeFactory->create(realpath(getcwd().'/../'.$pdpFolder['path'].'/data/pdp/previewimage'));
+		$tmpPath = $this->_writeFactory->create(realpath(getcwd().'/'.$pdpFolder['path'].'/data/pdp/previewimage'));
 		$tmpppName = pathinfo($oldUrl,PATHINFO_FILENAME). '.' .pathinfo($oldUrl,PATHINFO_EXTENSION);
 		$newImg = $tmpPath->copyFile($tmpppName,$tmpppName, $destDir);
 		if($newImg) {
