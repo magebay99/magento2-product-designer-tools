@@ -121,7 +121,16 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 												$dataItemVal[] = $_item;
 											}
 										}
-										$dataItemVal[] = $itemValue;
+										$update = false;
+										foreach($dataItemVal as $__item) {
+											if($__item['product_id'] == $itemValue['product_id'] && $__item['pdp_product_id'] == $itemValue['pdp_product_id'] && $__item['design_id'] == $itemValue['design_id']) {
+												$update = true;
+												break;
+											}
+										}
+										if(!$update) {
+											$dataItemVal[] = $itemValue;
+										}
 										$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();									
 									}
 								} catch(\Magento\Framework\Exception\LocalizedException $e) {
@@ -136,7 +145,17 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 									$dataGuestDesign = $modelGuestDesign->loadByCustomerId($customerId);
 									if($dataGuestDesign->getEntityId()) {
 										$dataItemVal = unserialize($dataGuestDesign->getItemValue());
-										$dataItemVal[] = $itemValue;
+										$update = false;
+										foreach($dataItemVal as $__item) {
+											if($__item['product_id'] == $itemValue['product_id'] && $__item['pdp_product_id'] == $itemValue['pdp_product_id'] && $__item['design_id'] == $itemValue['design_id']) {
+												$update = true;
+												break;
+											}
+										}
+										if(!$update) {
+											$dataItemVal[] = $itemValue;
+										}
+										
 										$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();									
 									}
 								} catch(\Magento\Framework\Exception\LocalizedException $e) {
@@ -152,7 +171,16 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 							try {
 								$dataGuestDesign = $modelGuestDesign->load($pdpGuestDesignId);
 								$dataItemVal = unserialize($dataGuestDesign->getItemValue());
-								$dataItemVal[] = $itemValue;
+								$update = false;
+								foreach($dataItemVal as $__item) {
+									if($__item['product_id'] == $itemValue['product_id'] && $__item['pdp_product_id'] == $itemValue['pdp_product_id'] && $__item['design_id'] == $itemValue['design_id']) {
+										$update = true;
+										break;
+									}
+								}
+								if(!$update) {
+									$dataItemVal[] = $itemValue;
+								}								
 								$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();
 							} catch(\Magento\Framework\Exception\LocalizedException $e) {
 								$reponse->setStatus(false)
@@ -189,5 +217,5 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 		}
 		
 		return $reponse;
-	}	
+	}
 }
