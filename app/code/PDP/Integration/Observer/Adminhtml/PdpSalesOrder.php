@@ -44,9 +44,11 @@ class PdpSalesOrder implements  ObserverInterface{
 			$dataOderRela = $pdpOrderRelation->getDataWithOrderId($orderId);
 			if($dataOderRela) {
 				foreach($dataOderRela as $vl) {
-					$pdp_order_id = $vl['pdp_order_id'];
+					if(isset($vl['pdp_order_id'])) {
+						$pdp_order_id = $vl['pdp_order_id'];
+					}
 				}
-				if($pdp_order_id) {
+				if(isset($pdp_order_id) && $pdp_order_id) {
 					$_data = $pdpOrder->load($pdp_order_id);
 					if($_data->getOrderId()) {
 						try {

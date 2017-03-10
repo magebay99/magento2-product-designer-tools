@@ -255,10 +255,29 @@ class PdpQuoteManagement implements ObserverInterface {
 				$customerId = $this->_customerSession->getCustomerId();
 				if($customerId) {
 					try{
-						$this->_pdpGuestDesignFactory->create()
-							  ->loadByCustomerId($customerId)
-							  ->setIsActive(0)
-							  ->save();
+						$guestDesignModel = $this->_pdpGuestDesignFactory->create();
+					    $dataGuestDesign = $guestDesignModel->loadByCustomerId($customerId);
+						if($dataGuestDesign->getEntityId()) {
+							$dataItemValue = unserialize($dataGuestDesign->getItemValue());
+							$guestDesignId = $dataGuestDesign->getEntityId();
+							foreach($dataItemValue as $__key => $__itemValue) {
+								foreach($_dataOrderItem as $__orderItem) {
+									if($__orderItem['design_id'] == $__itemValue['design_id'] && $__orderItem['product_id'] == $__itemValue['pdp_product_id']) {
+										unset($dataItemValue[$__key]);
+										break;
+									}
+								}
+							}
+							if(count($dataItemValue)) {
+								$guestDesignModel->load($guestDesignId)
+												 ->setItemValue(serialize($dataItemValue))
+												 ->save();							
+							} else {
+								$guestDesignModel->load($guestDesignId)
+												 ->setIsActive(0)
+												 ->save();							
+							}
+						}
 						$this->_pdpIntegrationSession->setPdpDesignId(null);
 					} catch(\Exception $e) {
 						$this->messageManager->addException($e, __('Update guest design error'));

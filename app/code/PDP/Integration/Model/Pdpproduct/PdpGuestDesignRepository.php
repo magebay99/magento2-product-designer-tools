@@ -113,9 +113,9 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 												->setMessage(nl2br($e->getMessage()));
 										return $reponse;
 									}
-									$dataGuestDesign = $modelGuestDesign->loadByCustomerId($customerId);
-									if($dataGuestDesign->getEntityId()) {
-										$dataItemVal = unserialize($dataGuestDesign->getItemValue());
+									$dataGuestDesignData = $modelGuestDesign->loadByCustomerId($customerId);
+									if($dataGuestDesignData->getEntityId()) {
+										$dataItemVal = unserialize($dataGuestDesignData->getItemValue());
 										if(isset($_dataItemVal)) {
 											foreach($_dataItemVal as $_item) {
 												$dataItemVal[] = $_item;
@@ -131,7 +131,7 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 										if(!$update) {
 											$dataItemVal[] = $itemValue;
 										}
-										$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();									
+										$dataGuestDesignData->setItemValue(serialize($dataItemVal))->save();									
 									}
 								} catch(\Magento\Framework\Exception\LocalizedException $e) {
 									$reponse->setStatus(false)
@@ -142,9 +142,9 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 						} else {
 							if($customerId) {
 								try {
-									$dataGuestDesign = $modelGuestDesign->loadByCustomerId($customerId);
-									if($dataGuestDesign->getEntityId()) {
-										$dataItemVal = unserialize($dataGuestDesign->getItemValue());
+									$dataGuestDesignData = $modelGuestDesign->loadByCustomerId($customerId);
+									if($dataGuestDesignData->getEntityId()) {
+										$dataItemVal = unserialize($dataGuestDesignData->getItemValue());
 										$update = false;
 										foreach($dataItemVal as $__item) {
 											if($__item['product_id'] == $itemValue['product_id'] && $__item['pdp_product_id'] == $itemValue['pdp_product_id'] && $__item['design_id'] == $itemValue['design_id']) {
@@ -156,7 +156,20 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 											$dataItemVal[] = $itemValue;
 										}
 										
-										$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();									
+										$dataGuestDesignData->setItemValue(serialize($dataItemVal))->save();									
+									} else {
+										try {
+											$dataGuestDesign['item_value'] = serialize([$itemValue]);
+											$dataGuestDesign['customer_is_guest'] = 0;
+											$dataGuestDesign['customer_id'] = $customerId;
+											$modelGuestDesign->addData($dataGuestDesign)->save();
+											$pdpGuestDesignId = $modelGuestDesign->getEntityId();
+											$this->_pdpIntegrationSession->setPdpDesignId($pdpGuestDesignId);
+										} catch(\Magento\Framework\Exception\LocalizedException $e) {
+											$reponse->setStatus(false)
+													->setMessage(nl2br($e->getMessage()));
+											return $reponse;
+										}
 									}
 								} catch(\Magento\Framework\Exception\LocalizedException $e) {
 									$reponse->setStatus(false)
@@ -169,8 +182,8 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 						if($this->_pdpIntegrationSession->getPdpDesignId()) {
 							$pdpGuestDesignId = $this->_pdpIntegrationSession->getPdpDesignId();
 							try {
-								$dataGuestDesign = $modelGuestDesign->load($pdpGuestDesignId);
-								$dataItemVal = unserialize($dataGuestDesign->getItemValue());
+								$dataGuestDesignData = $modelGuestDesign->load($pdpGuestDesignId);
+								$dataItemVal = unserialize($dataGuestDesignData->getItemValue());
 								$update = false;
 								foreach($dataItemVal as $__item) {
 									if($__item['product_id'] == $itemValue['product_id'] && $__item['pdp_product_id'] == $itemValue['pdp_product_id'] && $__item['design_id'] == $itemValue['design_id']) {
@@ -181,7 +194,7 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 								if(!$update) {
 									$dataItemVal[] = $itemValue;
 								}								
-								$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();
+								$dataGuestDesignData->setItemValue(serialize($dataItemVal))->save();
 							} catch(\Magento\Framework\Exception\LocalizedException $e) {
 								$reponse->setStatus(false)
 										->setMessage(nl2br($e->getMessage()));
