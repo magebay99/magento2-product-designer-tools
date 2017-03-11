@@ -1,7 +1,7 @@
 <?php
 /**
 
-/** @var $block \Magento\Checkout\Block\Cart\Item\Renderer */
+/** @var $block \PDP\Integration\Block\Cart\Item\Renderer */
 
 $_item = $block->getItem();
 $product = $_item->getProduct();
@@ -61,6 +61,7 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                 <?php if ($addInfoBlock): ?>
                     <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
                 <?php endif;?>
+				<?php echo $block->getHtmlCustomDesign() ?>
 				<div class="block-button">
 					<a class="edit-button" href="<?php echo $_helper->getLinkDesignPdpWithItemId($itemId)?>"><?php echo __('Edit Design')?></a>
 				</div>

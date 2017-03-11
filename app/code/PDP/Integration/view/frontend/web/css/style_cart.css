@@ -5,3 +5,5 @@
  -o-border-radius: 3px;
  border-radius: 3px;margin:18px 0;
 }
+.product-item-details ul.custom-design li{display:inline-block;margin-right:5px;}
+.product-item-details ul.custom-design li.last{margin-right:0;}

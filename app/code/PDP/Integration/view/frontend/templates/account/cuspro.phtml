@@ -128,6 +128,19 @@ require([
 	'Magento_Ui/js/modal/alert',
 	'mage/translate'
 ], function($, alert){
+	var alertModal = function(title, message) {
+			alert({
+				title: $.mage.__("!"+title),
+				content: $.mage.__(message),
+				autoOpen: true,
+				clickableOverlay: false,
+				focus: "",
+				actions: {
+					always: function(){
+					}
+				}
+			});
+	};	
     $(document).ready(function() {
         $('.block-button a.zip-design').each(function(){
 			$(this).click(function(){
@@ -146,35 +159,17 @@ require([
 								var data = res.data;
 								var url_download = data.baseUrl+''+data.file;
 								window.location.href = url_download;
+							} else {
+								alertModal('Error', 'can\'t zip design');
 							}
 						},
 						error: function(xhr, ajaxOptions, thrownError){
 							$('body').trigger('processStop');
-						   alert({
-								title: $.mage.__("!Error"),
-								content: thrownError,
-								autoOpen: true,
-								clickableOverlay: false,
-								focus: "",
-								actions: {
-									always: function(){										
-									}
-								}
-							});
+							alertModal('Error', thrownError);
 						}
 					});					
 				} else {
-				   alert({
-						title: $.mage.__("!Error"),
-						content: $.mage.__("can't zip design"),
-						autoOpen: true,
-						clickableOverlay: false,
-						focus: "",
-						actions: {
-							always: function(){
-							}
-						}
-					});
+					alertModal('Error', 'can\'t zip design');
 				}
 			});
 		});

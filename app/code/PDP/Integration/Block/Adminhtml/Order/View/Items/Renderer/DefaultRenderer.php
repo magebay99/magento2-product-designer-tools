@@ -53,6 +53,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 		if(count($pdpCart)) {
 			$urlTool = $this->_pdpOptions->getUrlToolDesign();
 			$designId = $pdpCart[0]['design_id'];
+			$pdpProductId = $pdpCart[0]['pdp_product_id'];
 			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
@@ -67,7 +68,67 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 				}
 				$html .= '</ul>';
 			}
+			$html .= $this->getBlockButtonHtml($pdpProductId, $designId);
 		}
+		return $html;
+	}
+	
+	/**
+	 * @param int $productId
+	 * @param int $designId
+	 * @return string
+	 */
+	public function getLinkEditDesign($productId, $designId) {
+		$url = $this->_pdpOptions->getUrlToolDesign();
+		$param = '';
+		if(!$productId || !$designId) {
+			return $url;
+		}
+		if($designId) {
+			$param .= '?export-design='.$designId;
+		}
+		if($productId) {
+			$param .= '&pid='.$productId;
+		}
+
+		if(substr($url, -1) == '/') {
+			$url .= $param;
+		} else {
+			$url .= '/'.$param;
+		}
+		return $url;
+	}
+	
+	/**
+	 * @param int $designId
+	 * @return string
+	 */
+	public function getLinkZipDesign($designId) {
+		$url = $this->_pdpOptions->getUrlToolDesign();
+		if($designId) {
+			if(substr($url, -1) == '/') {
+				$url .= 'rest/design-download?id='.$designId;
+			} else {
+				$url .= '/rest/design-download?id='.$designId;
+			}
+		}
+		return $url;
+	}
+	
+	/**
+	 * @param int $productId
+	 * @param int $designId
+	 * @return string
+	 */
+	public function getBlockButtonHtml($productId, $designId) {
+		$html = '';
+		if(!$productId || !$designId) {
+			return $html;
+		}
+		$html .= '<div class="block-button">';
+			$html .= '<a class="zip-design" href="javascript:void(0)" data-mage-init=\'{"pdpzipdesign":{"url":"'.$this->getLinkZipDesign($designId).'"}}\' >'.__('Zip Design').'</a>';
+			$html .= '<a class="edit-button" target="_blank" href="'.$this->getLinkEditDesign($productId, $designId).'">'.__('Edit Design').'</a>';
+		$html .= '</div>';
 		return $html;
 	}
 	

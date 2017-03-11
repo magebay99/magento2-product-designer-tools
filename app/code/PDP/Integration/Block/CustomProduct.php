@@ -158,11 +158,18 @@ class CustomProduct extends \PDP\Integration\Block\AbstractPdpAcc {
 	 */
 	public function getLinkZipDesign($designId) {
 		$url = $this->_pdpHelper->getUrlToolDesign();
+		$param = '';
 		if($designId) {
-			return $url.'/rest/design-download?id='.$designId.'&zip=1';
+			$param = 'rest/design-download?id='.$designId.'&zip=1';
 		} else {
 			return '#';
 		}
+		if(substr($url, -1) == '/') {
+			$url .= $param;
+		} else {
+			$url .= '/'.$param;
+		}
+		return $url;
 	}
 	
 	/**
@@ -172,11 +179,18 @@ class CustomProduct extends \PDP\Integration\Block\AbstractPdpAcc {
 	 */
 	public function getLinkEdit($designId, $productId) {
 		$url = $this->_pdpHelper->getUrlToolDesign();
+		$param = '';
 		if($productId) {
-			$url .= '?pid='.$productId;
+			$param .= '?pid='.$productId;
 		}
 		if($designId) {
-			$url .= '&tid='.$designId;
+			$param .= '&tid='.$designId;
+		}
+		
+		if(substr($url, -1) == '/') {
+			$url .= $param;
+		} else {
+			$url .= '/'.$param;
 		}
 		return $url;
 	}

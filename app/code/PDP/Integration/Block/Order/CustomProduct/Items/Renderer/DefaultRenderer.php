@@ -203,10 +203,16 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 					$urlEdit = $pdpQuoteData[0]['url'];
 					$designId = $pdpQuoteData[0]['design_id'];
 				}
+				$param = '';
 				if($designId) {
-					$urlTool .= '/rest/design-download?id='.$designId.'&zip=1';
+					$param .= 'rest/design-download?id='.$designId.'&zip=1';
 				} else {
-					$urlTool = '#';
+					$param = '#';
+				}
+				if(substr($urlTool, -1) == '/') {
+					$urlTool .= $param;
+				} else {
+					$urlTool .= '/'.$param;
 				}
 				$html .= '<span class="item-status">';
 				$html .= __($this->getStatus());
