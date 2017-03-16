@@ -142,16 +142,16 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
     /**
      * Gets the pdp product color.
      *
-     * @return \PDP\Integration\Api\Data\ProductColorInterface[]|null
+     * @return \PDP\Integration\Api\Data\ProductColorInterface|null
      */
     public function getProductColor();
 	
     /**
      * Sets the pdp product color.
-	 * @param \PDP\Integration\Api\Data\ProductColorInterface[] $productColor
+	 * @param \PDP\Integration\Api\Data\ProductColorInterface $productColor
      * @return $this
      */
-    public function setProductColor($productColor);
+    public function setProductColor(\PDP\Integration\Api\Data\ProductColorInterface $productColor);
 
     /**
      * Gets the pdp options.
