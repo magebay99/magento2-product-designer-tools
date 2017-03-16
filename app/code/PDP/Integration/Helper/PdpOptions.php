@@ -12,6 +12,8 @@ class PdpOptions extends AbstractHelper {
 	
     const PATH_CONFIG_PATHPDP_TOOL = 'pdpintegrat/general/pathpdp';
 	
+    const PATH_CONFIG_BUTTON_CUSTOM_LABEL = 'pdpintegrat/general/labelbutton';
+	
 	/**
      * @var PdpquoteCollectionFactory
      */
@@ -154,6 +156,17 @@ class PdpOptions extends AbstractHelper {
 	public function getUrlToolDesign() {
         return $this->scopeConfig->getValue(
             self::PATH_CONFIG_PATHPDP_TOOL,
+            ScopeInterface::SCOPE_STORE
+        );
+	}
+	
+	/**
+	 * Retrieve label button design
+	 * @return string
+	 */
+	public function getLabelCustom() {
+        return $this->scopeConfig->getValue(
+            self::PATH_CONFIG_BUTTON_CUSTOM_LABEL,
             ScopeInterface::SCOPE_STORE
         );
 	}

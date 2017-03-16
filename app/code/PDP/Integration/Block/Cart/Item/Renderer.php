@@ -85,13 +85,14 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
-				$html = '<ul class="items">';
+				$html = '<strong style="margin-bottom:5px;display:block;">'.__('Customized Design:').'</strong>';
+				$html .= '<ul class="items">';
 				$i=0;
 				foreach($sideThubms as $sideThub) {
 					if($sideThub['thumb']) {
 						$i++;
 						$last = $i%2==0?'last':'';
-						$html .= '<li style="display:inline-block;margin-right:5px;" class="item '.$last.'"><img style="border:1px solid #C1C1C1;" width="66" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></li>';
+						$html .= '<li style="display:inline-block;margin-right:5px;" class="item '.$last.'"><a href="'.$urlTool.'/'.$sideThub['thumb'].'" target="_blank"><img style="border:1px solid #C1C1C1;" width="66" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></a></li>';
 					}
 				}
 				$html .= '</ul>';

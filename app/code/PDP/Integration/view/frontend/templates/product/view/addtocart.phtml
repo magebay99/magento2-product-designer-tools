@@ -6,8 +6,7 @@ $_product = $block->getProduct();
 $_sku = $_product->getSku();
 $link_edit = $helper->getLinkDesignPdp($_sku);
 ?>
-<?php $buttonTitle = __('CUSTOMIZE IT'); ?>
-<?php //if ($_product->isSaleable()): ?>
+<?php $buttonTitle = __($helper->getLabelCustom()); ?>
 <div class="box-tocart">
     <div class="fieldset">
         <div class="actions">
@@ -20,4 +19,3 @@ $link_edit = $helper->getLinkDesignPdp($_sku);
         </div>
     </div>
 </div>
-<?php //endif; ?>

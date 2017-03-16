@@ -47,13 +47,14 @@ class DefaultOrder extends \Magento\Sales\Block\Order\Email\Items\Order\DefaultO
 			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
-				$html = '<ul class="items">';
+				$html = '<strong style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</strong>';
+				$html .= '<ul class="items">';
 				$i=0;
 				foreach($sideThubms as $sideThub) {
 					if($sideThub['thumb']) {
 						$i++;
 						$last = $i%2==0?'last':'';
-						$html .= '<li class="item '.$last.'"><img style="border:1px solid #C1C1C1;" width="143" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></li>';
+						$html .= '<li class="item '.$last.'"><a href="'.$urlTool.'/'.$sideThub['thumb'].'" target="_blank"><img style="border:1px solid #C1C1C1;" width="143" src="'.$urlTool.'/'.$sideThub['thumb'].'" /></a></li>';
 					}
 				}
 				$html .= '</ul>';

@@ -24,6 +24,8 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
 	
     const PDP_URL_PRODUCT = 'design_url';
 	
+    const PDP_PRODUCT_COLOR = 'product_color';
+	
 	/*
      * pdp option.
      */
@@ -137,6 +139,20 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      */
     public function setDesignUrl($design_url);	
 		
+    /**
+     * Gets the pdp product color.
+     *
+     * @return \PDP\Integration\Api\Data\ProductColorInterface[]|null
+     */
+    public function getProductColor();
+	
+    /**
+     * Sets the pdp product color.
+	 * @param \PDP\Integration\Api\Data\ProductColorInterface[] $productColor
+     * @return $this
+     */
+    public function setProductColor($productColor);
+
     /**
      * Gets the pdp options.
      *

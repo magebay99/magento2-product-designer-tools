@@ -5,6 +5,7 @@
 		<pdpintegrat>
 	        <general>
 	            <enabled>1</enabled>
+	            <labelbutton>CUSTOMIZE IT</labelbutton>
 	        </general>
 		</pdpintegrat>
 	 </default>

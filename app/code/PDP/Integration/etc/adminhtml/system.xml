@@ -19,6 +19,9 @@
 				<field id="pathpdp" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Url P+</label>
 				</field>
+				<field id="labelbutton" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Label Button Custom</label>
+				</field>
 			</group>
 		</section>
     </system>

@@ -94,7 +94,7 @@ $guestDesign = $block->getProductGuestDesign();
 											if($sideThub['thumb']) {	
 											$_last = $_i%2==0?'last':'';
 									?>
-											<li class="item <?php echo $_last ?>"><img style="border:1px solid #C1C1C1;" width="143" src="<?php echo $block->getUrlToolDesign().'/'.$sideThub['thumb'] ?>" alt="" /></li>
+											<li class="item <?php echo $_last ?>"><a href="<?php echo $block->getUrlToolDesign().'/'.$sideThub['thumb'] ?>" target="_blank"><img style="border:1px solid #C1C1C1;" width="143" src="<?php echo $block->getUrlToolDesign().'/'.$sideThub['thumb'] ?>" alt="" /></li>
 									<?php 
 											} 
 										} 
