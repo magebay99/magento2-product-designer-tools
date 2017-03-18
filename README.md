@@ -2,7 +2,7 @@
 - The Magento2 Bridge plugin integrates your PDP system into Magento2 at https://goo.gl/AFlnBQ
 - Manage order with customized design (Export and Edit customized design from customer's order details)
 - Manage personalize products with PDP
-- Manage My Customized Design section
+- Manage My Customized Design section (Magento user can save or order customized design)
 - Source code is open for any suggest or customization.
 - Only contributors can submit commit 
 
