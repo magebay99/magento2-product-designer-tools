@@ -218,7 +218,9 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 				$html .= __($this->getStatus());
 				$html .= '</span>';
 				$html .= '<div class="block-button">';
-					$html .= '<a class="zip-design" href="javascript:void(0)" data-href="'.$urlTool.'">'.__('Zip Design').'</a>';
+					if($this->getStatus() == 'complete') {
+						$html .= '<a class="zip-design" href="javascript:void(0)" data-href="'.$urlTool.'">'.__('Zip Design').'</a>';
+					}
 					$html .= '<a class="edit-button" href="'.$urlEdit.'">'.__('Edit Design').'</a>';
 				$html .= '</div>';
                 break;

@@ -143,11 +143,15 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					}
 					if(isset($pdp_print_type) && count($pdp_print_type)) {
 						$printType = array('label' => __('Print type'), 'value' => '');
-						$printType['value'] = $pdp_print_type['title'];
+						if(isset($pdp_print_type['title'])) {
+							$printType['value'] = $pdp_print_type['title'];
+						}
 						if(isset($pdp_print_type['price'])){
 							$printTypePrice = $pdp_print_type['price'];
 						}
-						$printTypeValue = $pdp_print_type['value'];
+						if(isset($pdp_print_type['value'])) {
+							$printTypeValue = $pdp_print_type['value'];
+						}
 						$additionalOptions[] = $printType;
 						if(isset($printTypeValue)) {
 							$infoRequest['pdp_print_type'] = $printTypeValue;

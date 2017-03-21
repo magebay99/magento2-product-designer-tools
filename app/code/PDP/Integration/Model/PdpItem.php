@@ -142,7 +142,7 @@ class PdpItem extends AbstractExtensibleObject implements PdpItemInterface {
     /**
      * Gets the pdp product color.
      *
-     * @return \PDP\Integration\Api\Data\ProductColorInterface[]|null
+     * @return \PDP\Integration\Api\Data\ProductColorInterface|null
      */
     public function getProductColor() {
 		return $this->_get(self::PDP_PRODUCT_COLOR);

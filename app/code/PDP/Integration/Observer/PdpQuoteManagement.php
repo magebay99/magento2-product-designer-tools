@@ -149,6 +149,7 @@ class PdpQuoteManagement implements ObserverInterface {
 						$item->setProductOptions($additionalOptions);
 						$item->save();
 					}
+					/* not create order p+
 					$itemPrice = 0;
 					$dataOrderItem = array();
 					if(isset($pdpItemArr['pdp_product_id'])) {
@@ -204,11 +205,11 @@ class PdpQuoteManagement implements ObserverInterface {
 					}
 					if(count($dataOrderItem)) {
 						$_dataOrderItem[] = $dataOrderItem;
-					}
+					}*/
 				}
 			}
 		}
-		$this->__saveInfoOrderPdp($order, $saveOrderInfoPdp, $_dataOrderItem, $pdpOrderTotal);
+		//$this->__saveInfoOrderPdp($order, $saveOrderInfoPdp, $_dataOrderItem, $pdpOrderTotal);
 		return $this;
 	}
 	

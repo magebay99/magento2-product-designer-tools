@@ -109,7 +109,7 @@ $guestDesign = $block->getProductGuestDesign();
 							<td align="right" class="col-status last">
 								<span class="item-status"><?php /* @noEscape */ echo __('Pending') ?></span>
 								<div class="block-button">
-									<a class="zip-design" href="javascript:void(0)" data-href="<?php echo $block->getLinkZipDesign($guestItem['design_id']) ?>"><?php echo __('Zip Design') ?></a>
+									<?php /*<a class="zip-design" href="javascript:void(0)" data-href="<?php echo $block->getLinkZipDesign($guestItem['design_id']) ?>"><?php echo __('Zip Design') ?></a>*/?>
 									<a class="edit-button" href="<?php echo $block->getLinkEdit($guestItem['design_id'], $guestItem['pdp_product_id']) ?>"> <?php echo __('Edit Design') ?></a>
 								</div>
 							</td>
