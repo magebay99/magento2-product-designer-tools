@@ -1,3 +1,6 @@
+
+![Alt text](http://demo.productsdesignerpro.com/magento2/lab/public/admin/images/pushandpull.svg "Enable Shopping Cart") 
+
 # Free download The Magento2 Bridge plugin for Online Product Designer Tools
 - The Magento2 Bridge plugin integrates your PDP system into Magento2 at https://goo.gl/AFlnBQ
 - Manage order with customized design (Export and Edit customized design from customer's order details)
@@ -28,7 +31,15 @@ php bin/magento setup:static-content:deploy
 ![Alt text](http://image.prntscr.com/image/d590b720a652453da0851ae3d8770309.png "Enable Shopping Cart") 
 
 - Enter API access information to connect with Magento2(it can be Magento2 admin access)
+![Alt text](http://image.prntscr.com/image/64b97bb64d7c44a7be25b7adbcf33284.png "Integrate with Magento2") 
+
 2. Push products into Magento2 for ready to publish.
+- Push single product to Magento2
+![Alt text](http://image.prntscr.com/image/c9a9e469a1a046b5a8efcb5fc7d849be.png "Push single product to live") 
+- Push multiple products (max 12)
+![Alt text](http://g.recordit.co/wPC1LI8pcw.gif "Push multiple products (max 12)") 
+
+After product is pushed succesful, that item status will be change to LIVE
 
 
 # About The PDP System
