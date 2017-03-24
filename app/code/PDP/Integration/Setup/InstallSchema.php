@@ -186,6 +186,7 @@ class InstallSchema implements InstallSchemaInterface {
         )->setComment(
             'pdp Guest Custom Design'
         );
+		$installer->getConnection()->createTable($table);
         /**
          * Create table 'pdp_product'
          */
