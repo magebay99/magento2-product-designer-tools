@@ -2,7 +2,7 @@
 namespace PDP\Integration\Model;
 
 use Magento\Framework\Api\AbstractExtensibleObject;
-use PDP\Integration\Api\data\ProductOptionValueInterface;
+use PDP\Integration\Api\Data\ProductOptionValueInterface;
 
 /**
  * Defines the implementaiton class of the calculator service contract.
