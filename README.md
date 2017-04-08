@@ -43,7 +43,9 @@ After products are pushed succesful, all these items status will be change to LI
 
 
 # About The PDP System
-An Online Products Designer Tools For most popular ecommerce platform like Magento, Woocommerce, OpenCart, Shopify, Prestashop and  your custom cart. Here are some useful information:
+An Online Products Designer Tools For most popular ecommerce platform like Magento, Woocommerce, OpenCart, Shopify, Prestashop and  your custom cart. 
+![Alt text](https://productsdesignerpro.com/wp-content/uploads/2016/08/mockup-on-ipad.jpg "Push multiple products") 
+Helpful links:
 - How it works? Check here https://goo.gl/8lJttH
 - Key Features  https://goo.gl/Plj3qo
 - Pricing https://goo.gl/vq7LIr
