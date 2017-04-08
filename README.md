@@ -42,8 +42,8 @@ php bin/magento setup:static-content:deploy
 After products are pushed succesful, all these items status will be change to LIVE in PDP, and ready for sell on Magento 2.
 
 
-# About The PDP System
-An Online Products Designer Tools For most popular ecommerce platform like Magento, Woocommerce, OpenCart, Shopify, Prestashop and  your custom cart. 
+# About Online Products Designer Tools PDP
+Products Designer Pro (PDP) are compatible with the most popular ecommerce platforms, such as Magento 1.9.x, Magento 2.x, Woocommerce, OpenCart, Shopify, Prestashop. It provides solution for online printing on demand services.
 ![Alt text](https://productsdesignerpro.com/wp-content/uploads/2016/08/mockup-on-ipad.jpg "Push multiple products") 
 Helpful links:
 - How it works? Check here https://goo.gl/8lJttH
