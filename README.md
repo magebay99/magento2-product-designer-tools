@@ -1,3 +1,4 @@
+Demo Online Product Designer Pro https://goo.gl/kYho1j 
 # About Online Products Designer Tools PDP
 Products Designer Pro (PDP) are compatible with the most popular ecommerce platforms, such as Magento 1.9.x, Magento 2.x, Woocommerce, OpenCart, Shopify, Prestashop. It provides solution for online printing on demand services.
 ![Alt text](https://productsdesignerpro.com/wp-content/uploads/2016/08/mockup-on-ipad.jpg "Push multiple products") 
@@ -6,7 +7,7 @@ Helpful links:
 - Key Features  https://goo.gl/Plj3qo
 - Pricing https://goo.gl/vq7LIr
 - Help Center https://goo.gl/fWjkKz
-Demo Online Product Designer Pro https://goo.gl/kYho1j 
+
 
 # Free download The Magento2 Connector plugin for Online Product Designer Tools 
 - The Magento2 Connector plugin will connect Magento with Product Designer Pro system https://goo.gl/AFlnBQ
