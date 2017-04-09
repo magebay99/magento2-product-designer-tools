@@ -36,7 +36,7 @@ php bin/magento setup:static-content:deploy
 
 # One click to push products from PDP to Magento 2
 
-1. Config Connector #PDP with Magento 2. 
+1. Config Connector #PDP with Magento 2.  
 - Enable Shopping cart and connect to Magento2:
 
 ![Alt text](http://image.prntscr.com/image/d590b720a652453da0851ae3d8770309.png "Enable Shopping Cart") 
