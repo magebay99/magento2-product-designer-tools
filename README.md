@@ -23,11 +23,11 @@ Helpful links:
 1. Download and upload into your Magento2 root directory
 2. Run install command line from Magento 2 root directory (via SSH)
 
-php bin/magento setup:upgrade 
+```php bin/magento setup:upgrade```
 
-php bin/magento setup:di:compile
+```php bin/magento setup:di:compile```
 
-php bin/magento setup:static-content:deploy
+```php bin/magento setup:static-content:deploy```
 
 3. Config module in Magento Backend
 
