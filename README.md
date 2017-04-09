@@ -1,6 +1,6 @@
 Demo Online Product Designer Pro https://goo.gl/kYho1j 
-# About Online Products Designer Tools PDP
-Products Designer Pro (PDP) are compatible with the most popular ecommerce platforms, such as Magento 1.9.x, Magento 2.x, Woocommerce, OpenCart, Shopify, Prestashop. It provides solution for online printing on demand services.
+# About Online Products Designer Tools #PDP
+Products Designer Pro (#PDP) are compatible with the most popular ecommerce platforms, such as Magento 1.9.x, Magento 2.x, Woocommerce, OpenCart, Shopify, Prestashop. It provides solution for online printing on demand services.
 ![Alt text](https://productsdesignerpro.com/wp-content/uploads/2016/08/mockup-on-ipad.jpg "Push multiple products") 
 Helpful links:
 - How it works? Check here https://goo.gl/8lJttH
@@ -12,7 +12,7 @@ Helpful links:
 # Free download The Magento2 Connector plugin for Online Product Designer Tools 
 - The Magento2 Connector plugin will connect Magento with Product Designer Pro system https://goo.gl/AFlnBQ
 - Manage order and export all customized designs from Magento Backend (Export and Edit customized design from customer's order details)
-- Manage personalize products which was pushed by PDP (Update information)
+- Manage personalize products which was pushed by #PDP (Update information)
 - Customer can save customized design in My Customized Design section (Magento user can save or order customized design)
 - Source code is open for any suggest or customization the shopping cart rules.
 - Only contributors can submit commit.
@@ -36,7 +36,7 @@ php bin/magento setup:static-content:deploy
 
 # One click to push products from PDP to Magento 2
 
-1. Config Connector PDP with Magento 2. 
+1. Config Connector #PDP with Magento 2. 
 - Enable Shopping cart and connect to Magento2:
 
 ![Alt text](http://image.prntscr.com/image/d590b720a652453da0851ae3d8770309.png "Enable Shopping Cart") 
@@ -50,7 +50,7 @@ php bin/magento setup:static-content:deploy
 - Push multiple products 
 ![Alt text](http://g.recordit.co/wPC1LI8pcw.gif "Push multiple products (max 12)") 
 
-After products are pushed succesful, all these items status will be change to LIVE in PDP, and ready for sell on Magento 2.
+After products are pushed succesful, all these items status will be change to LIVE in #PDP, and ready for sell on Magento 2.
 
 
 
