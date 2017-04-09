@@ -7,7 +7,8 @@ Demo Online Product Designer Pro https://goo.gl/kYho1j
 - Customer can save customized design in My Customized Design section (Magento user can save or order customized design)
 - Source code is open for any suggest or customization the shopping cart rules.
 - Only contributors can submit commit.
-
+# Download
+[Lastest Version](https://github.com/magebay99/magento2-product-designer-tools/archive/master.zip)
 # Installation Guide 
 
 1. Download and upload into your Magento2 root directory
