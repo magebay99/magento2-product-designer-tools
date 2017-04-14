@@ -100,4 +100,24 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 		}
 		return $html;
 	}
+	
+    /**
+     * Get product customize options
+     *
+     * @return array
+     */
+    public function getProductOptions()
+    {
+        /* @var $helper \Magento\Catalog\Helper\Product\Configuration */
+        $helper = $this->_productConfig;
+		$options = $helper->getCustomOptions($this->getItem());
+		if(is_array($options)) {
+			foreach($options as $key => $value) {
+				if($value['title'] === 'design Id') {
+					unset($options[$key]);
+				}
+			}
+		}
+        return $options;
+    }	
 }

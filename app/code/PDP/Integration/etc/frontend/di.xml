@@ -1,18 +1,10 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-	<!--preference for="Magento\Catalog\Helper\Product\View" type="PDP\Integration\Helper\Product\View" /-->
-	<!--preference for="Magento\Checkout\Block\Cart" type="PDP\Integration\Block\Cart\Cart" /-->
-	<!--type name="Magento\Checkout\Block\Cart\AbstractCart">
-		<plugin name="pdp_item_layout" type="PDP\Integration\Plugin\Checkout\Block\Cart\AbstractCart" sortOrder="1" />
-	</type-->
-	<!--type name="Magento\Checkout\Model\DefaultConfigProvider">
-		<plugin name="pdp_checkout_config_data" type="PDP\Integration\Plugin\Checkout\Model\DefaultConfigProvider" sortOrder="1" />
-	</type>
-	<type name="Magento\Checkout\Block\Cart\Item\Renderer">
-		<plugin name="pdp_cart_item_option_data" type="PDP\Integration\Plugin\Cart\Item\Renderer" />
-	</type-->
 	<type name="Magento\Checkout\CustomerData\Cart">
         <plugin name="pdp_cart_private_data_items" type="PDP\Integration\Plugin\Checkout\CustomerData\Cart" sortOrder="50" />
-    </type>	
+    </type>
+	<type name="Magento\Catalog\Helper\Product\Configuration">
+		<plugin name="pdp_catalog_helper_product_configuration" type="PDP\Integration\Plugin\ProductConfiguration" sortOrder="50" />
+	</type>
 </config>

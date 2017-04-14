@@ -154,10 +154,16 @@ class PdpOptions extends AbstractHelper {
      * @return String
      */
 	public function getUrlToolDesign() {
-        return $this->scopeConfig->getValue(
+        $url = $this->scopeConfig->getValue(
             self::PATH_CONFIG_PATHPDP_TOOL,
             ScopeInterface::SCOPE_STORE
         );
+		if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+			$baseUrl = $this->_urlBuilder->getBaseUrl();
+			return $baseUrl.$url;
+		} else {
+			return $url;
+		}
 	}
 	
 	/**
@@ -203,7 +209,7 @@ class PdpOptions extends AbstractHelper {
 	 *
 	 * @return array()
      */		
-    public function getOptInfoRquest($options) {
+    public function getOptInfoRquest(array $options) {
 		$infoRequest = array(
 			'pdp_options' => array(),
 			'pdp_price' => 0
@@ -246,7 +252,7 @@ class PdpOptions extends AbstractHelper {
 	 *
 	 * @return array()
      */	
-	public function getAdditionOption($options) {
+	public function getAdditionOption(array $options) {
 		$additionalOptions = array();
 		foreach($options as $key => $val) {
 			$item = array(
@@ -278,7 +284,7 @@ class PdpOptions extends AbstractHelper {
 	 *
 	 * @return array()
      */		
-	public function getOptionsSelect($options) {
+	public function getOptionsSelect(array $options) {
 		$result = array();
 		$_key = 0;
 		foreach($options as $key => $val) {

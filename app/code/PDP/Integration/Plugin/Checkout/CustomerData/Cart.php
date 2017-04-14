@@ -108,6 +108,18 @@ class Cart
 						//$sku = $result['items'][$key]['product_sku'];
 						$url = $this->_helperPdpOpt->getLinkDesignPdpWithItemId($itemId);
 						$result['items'][$key]['configure_url'] = $url;
+						if(is_array($result['items'][$key]['options'])) {
+							$newOption = array();
+							foreach($result['items'][$key]['options'] as $_key => $_value) {
+								if($_value['label'] == 'Design Id' && strpos($_value['value'], 'pdp_design_id') == 0) {
+									continue;
+								}
+								$newOption[] = $_value;
+							}
+							if(count($newOption)) {
+								$result['items'][$key]['options'] = $newOption;
+							}
+						}
 					}
                 }
             }

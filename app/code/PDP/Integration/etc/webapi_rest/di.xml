@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!--preference for="Magento\Quote\Model\Quote\Item\CartItemPersister" type="PDP\Integration\Model\Webapi\Quote\Item\CartItemPersister" /-->
+	<type name="Magento\Catalog\Helper\Product\Configuration">
+		<plugin name="pdp_catalog_helper_product_configuration" type="PDP\Integration\Plugin\ProductConfiguration" sortOrder="50" />
+	</type>
 </config>

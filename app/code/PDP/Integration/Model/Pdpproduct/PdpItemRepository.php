@@ -141,6 +141,10 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						$additionalOptions = array();
 						$infoRequest = array();
 					}
+					if($pdpItem->getDesignId()) {
+						$infoRequest['design_id'] = $pdpItem->getDesignId();
+						$additionalOptions[] = array('label' => 'Design Id', 'value' => 'pdp_design_id'.$pdpItem->getDesignId());
+					}
 					if(isset($pdp_print_type) && count($pdp_print_type)) {
 						$printType = array('label' => __('Print type'), 'value' => '');
 						if(isset($pdp_print_type['title'])) {
@@ -152,11 +156,18 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						if(isset($pdp_print_type['value'])) {
 							$printTypeValue = $pdp_print_type['value'];
 						}
-						$additionalOptions[] = $printType;
+						if($printType['value'] != '') {
+							$additionalOptions[] = $printType;
+						}
 						if(isset($printTypeValue)) {
 							$infoRequest['pdp_print_type'] = $printTypeValue;
-							if(isset($printTypePrice))
-								$infoRequest['pdp_price'] += $printTypePrice;
+							if(isset($printTypePrice)) {
+								if(isset($infoRequest['pdp_price'])) {
+									$infoRequest['pdp_price'] += $printTypePrice;
+								} else {
+									$infoRequest['pdp_price'] = $printTypePrice;
+								}
+							}
 						}
 					}
 					if(isset($productColor) && count($productColor)) {

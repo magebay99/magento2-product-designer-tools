@@ -49,7 +49,7 @@ class PdpItemPrice implements ObserverInterface {
 		$product = $observer->getEvent()->getData('product');
 		$item = ( $item->getParentItem() ? $item->getParentItem() : $item );
 		$infoRequest = $item->getBuyRequest();
-		if(isset($infoRequest['pdp_options']) && $product->getTypeId() == 'pdpro') {
+		if($product->getTypeId() == 'pdpro') {
 			if(isset($infoRequest['pdp_price']) && $infoRequest['pdp_price']) {
 				$pdpPrice = $infoRequest['pdp_price'];
 				$pdpPrice = $this->_priceHelper->currency($pdpPrice,false,false);

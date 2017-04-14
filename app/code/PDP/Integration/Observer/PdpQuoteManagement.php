@@ -140,9 +140,15 @@ class PdpQuoteManagement implements ObserverInterface {
 					$additionalOptions['info_buyRequest'] = $requestOptions;
 					if(isset($pdp_print_type) && count($pdp_print_type)) {
 						$printType = array('label' => 'Print type', 'value' => '');
-						$printType['value'] = $pdp_print_type['title'];
-						$printTypeValue = $pdp_print_type['value'];
-						$additional_options[] = $printType;
+						if(isset($pdp_print_type['title'])) {
+							$printType['value'] = $pdp_print_type['title'];
+						}
+						if(isset($pdp_print_type['value'])) {
+							$printTypeValue = $pdp_print_type['value'];
+						}
+						if($printType['value'] != '') {
+							$additional_options[] = $printType;
+						}
 					}
 					if(count($additional_options)) {
 						$additionalOptions['additional_options'] = $additional_options;
