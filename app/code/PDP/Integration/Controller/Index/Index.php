@@ -59,7 +59,7 @@ class Index extends \Magento\Framework\App\Action\Action
 		\PDP\Integration\Model\ResourceModel\Pdpquote $pdpquote,
 		CartRepositoryInterface $quoteRepository,
 		ItemConverter $converter,
-		PdpproductFactory $pdpproductFactory,
+		//PdpproductFactory $pdpproductFactory,
 		ProductRepositoryInterface $productRepository
     ) {
         $this->resultPageFactory = $resultPageFactory;
