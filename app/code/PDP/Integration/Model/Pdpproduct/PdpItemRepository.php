@@ -61,7 +61,12 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
      *
      * @var \PDP\Integration\Model\Session
      */
-    protected $_pdpIntegrationSession;	
+    protected $_pdpIntegrationSession;
+	
+    /**
+     * @var \Magento\Catalog\Model\ProductFactory
+     */
+    protected $productFactory;	
 
 	/**
      * @param DataObjectFactory $objectFactory
@@ -75,6 +80,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 	 * @param CustomerCart $cart
 	 * @param \PDP\Integration\Model\Session $pdpIntegrationSession
      * @param PdpproductFactory $pdpproductFactory
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
      */
     public function __construct(
         DataObjectFactory $objectFactory,
@@ -86,7 +92,8 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		\PDP\Integration\Model\PdpquoteFactory $pdpquoteFactory,
 		\PDP\Integration\Model\Session $pdpIntegrationSession,		
 		CustomerCart $cart,		
-        PdpproductFactory $pdpproductFactory
+        PdpproductFactory $pdpproductFactory,
+		\Magento\Catalog\Model\ProductFactory $productFactory
     ) {
         $this->objectFactory = $objectFactory;
 		$this->pdpReponseFactory = $pdpReponseFactory;
@@ -98,6 +105,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		$this->_pdpIntegrationSession = $pdpIntegrationSession;		
 		$this->cart = $cart;		
         $this->_pdpproductFactory = $pdpproductFactory;
+		$this->productFactory = $productFactory;
     }
 	
     /**
@@ -132,14 +140,14 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						$productColor = $postDataArr['product_color'];
 						$dataOpt['product_color'] = $productColor;
 					}
+					$additionalOptions = array();
+					$infoRequest = array();
 					if(isset($pdp_option_data)) {
-						$pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdp_option_data);
+						$_pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdp_option_data);
+						$pdpOptSelect = $_pdpOptSelect['options'];
 						$infoRequest = $this->_pdpOptions->getOptInfoRquest($pdpOptSelect);
 						$additionalOptions = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
 						$dataOpt['pdp_options'] = $pdpOptSelect;
-					} else {
-						$additionalOptions = array();
-						$infoRequest = array();
 					}
 					if($pdpItem->getDesignId()) {
 						$infoRequest['design_id'] = $pdpItem->getDesignId();
@@ -171,7 +179,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 						}
 					}
 					if(isset($productColor) && count($productColor)) {
-						$product_color = array('label' => __('Color'), 'value' => $productColor['color_name']);
+						$product_color = array('label' => __('Color'), 'value' => __($productColor['color_name']));
 						$additionalOptions[] = $product_color;
 						if(isset($productColor['color_id'])) {
 							$infoRequest['pdp_product_color'] = $productColor['color_id'];
@@ -184,43 +192,177 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					try {
 						if($pdpItem->getItemId()) {
 							$this->cart->removeItem($pdpItem->getItemId());
-						}
-						$product->addCustomOption('additional_options', serialize($additionalOptions));
-						$this->cart->addProduct($product, $infoRequest);
-						$this->cart->save();
-						try{
-							if (!$this->cart->getQuote()->getHasError()) {
-								$modelPdpquote = $this->_pdpquoteFactory->create();
-								$itembypro = $this->cart->getQuote()->getItemByProduct($product);
-								if($itembypro != false) {
-									$itemId = $itembypro->getItemId();
-									$data = array(
-										'item_id' => $itemId,
-										'product_id' => $itembypro->getProductId(),
-										'pdp_product_id' => $pdpItem->getEntityId(),
-										'sku' => $pdpItem->getSku(),
-										'store_id' => $itembypro->getStoreId(),
-										'value' => serialize($dataOpt)
-									);
-									if($pdpItem->getDesignId()) {
-										$data['design_id'] = $pdpItem->getDesignId();
+							if(isset($_pdpOptSelect) && $_pdpOptSelect['multiSize'] && count($_pdpOptSelect['multiSizeOpt']['values'])) {
+								$multiSizeOpt = $_pdpOptSelect['multiSizeOpt'];
+								foreach($multiSizeOpt['values'] as $_val) {
+									$_product = $this->productFactory->create()->load($infoRequest['product']);
+									$_infoRequest = $infoRequest;
+									$_additionalOptions = $additionalOptions;
+									$_infoRequest['qty'] = $_val['qty'];
+									$_additionalOptions[] = array('label' => __($multiSizeOpt['title']), 'value' => __($_val['title']));
+									$_infoRequest['pdp_options'][$multiSizeOpt['option_id']] = $_val['option_type_id'];
+									$_infoRequest['pdp_price'] += $_val['price'];
+									$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+									$this->cart->addProduct($_product, $_infoRequest);
+								}
+								$this->cart->save();
+								$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
+								foreach($quoteItemsArr as $__quoteItem) {
+									try {
+										if (!$this->cart->getQuote()->getHasError()) {
+											$modelPdpquote = $this->_pdpquoteFactory->create();
+											$itemId = $__quoteItem->getItemId();
+											$dataItem = $modelPdpquote->loadByItemId($itemId);
+											if(!$dataItem->getPdpcartId()) {
+												$data = array(
+													'item_id' => $itemId,
+													'product_id' => $__quoteItem->getProductId(),
+													'pdp_product_id' => $pdpItem->getEntityId(),
+													'sku' => $pdpItem->getSku(),
+													'store_id' => $__quoteItem->getStoreId(),
+													'value' => serialize($dataOpt)
+												);
+												if($pdpItem->getDesignId()) {
+													$data['design_id'] = $pdpItem->getDesignId();
+												}
+												if($pdpItem->getDesignUrl()) {
+													$data['url'] = $pdpItem->getDesignUrl();
+												}
+												$modelPdpquote->addData($data);
+												$modelPdpquote->save();
+											}
+										}
+									} catch(\Magento\Framework\Exception\LocalizedException $e) {
+										$reponse->setStatus(false)
+												->setMessage(nl2br($e->getMessage()));
+										return $reponse;
 									}
-									if($pdpItem->getDesignUrl()) {
-										$data['url'] = $pdpItem->getDesignUrl();
+								}
+							} else {
+								$product->addCustomOption('additional_options', serialize($additionalOptions));
+								$this->cart->addProduct($product, $infoRequest);
+								$this->cart->save();
+								try {
+									if (!$this->cart->getQuote()->getHasError()) {
+										$modelPdpquote = $this->_pdpquoteFactory->create();
+										$itembypro = $this->cart->getQuote()->getItemByProduct($product);
+										if($itembypro != false) {
+											$itemId = $itembypro->getItemId();
+											$data = array(
+												'item_id' => $itemId,
+												'product_id' => $itembypro->getProductId(),
+												'pdp_product_id' => $pdpItem->getEntityId(),
+												'sku' => $pdpItem->getSku(),
+												'store_id' => $itembypro->getStoreId(),
+												'value' => serialize($dataOpt)
+											);
+											if($pdpItem->getDesignId()) {
+												$data['design_id'] = $pdpItem->getDesignId();
+											}
+											if($pdpItem->getDesignUrl()) {
+												$data['url'] = $pdpItem->getDesignUrl();
+											}
+											$dataItem = $modelPdpquote->loadByItemId($itemId);
+											if($dataItem->getPdpcartId()) {
+												$data['pdpcart_id'] = $dataItem->getPdpcartId();
+											}
+											$modelPdpquote->addData($data);
+											$modelPdpquote->save();									
+										}
 									}
-									$dataItem = $modelPdpquote->_loadByItemId($itemId);
-									if(count($dataItem)) {
-										$data['pdpcart_id'] = $dataItem[0];
-									}
-									$modelPdpquote->addData($data);
-									$modelPdpquote->save();									
+								} catch(\Magento\Framework\Exception\LocalizedException $e) {
+									$reponse->setStatus(false)
+											->setMessage(nl2br($e->getMessage()));
+									return $reponse;
 								}
 							}
-						} catch(\Magento\Framework\Exception\LocalizedException $e) {
-							$reponse->setStatus(false)
-									->setMessage(nl2br($e->getMessage()));
-							return $reponse;
+						} else {
+							if(isset($_pdpOptSelect) && $_pdpOptSelect['multiSize'] && count($_pdpOptSelect['multiSizeOpt']['values'])) {
+								$multiSizeOpt = $_pdpOptSelect['multiSizeOpt'];
+								foreach($multiSizeOpt['values'] as $_val) {
+									$_product = $this->productFactory->create()->load($infoRequest['product']);
+									$_infoRequest = $infoRequest;
+									$_additionalOptions = $additionalOptions;
+									$_infoRequest['qty'] = $_val['qty'];
+									$_additionalOptions[] = array('label' => __($multiSizeOpt['title']), 'value' => __($_val['title']));
+									$_infoRequest['pdp_options'][$multiSizeOpt['option_id']] = $_val['option_type_id'];
+									$_infoRequest['pdp_price'] += $_val['price'];
+									$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+									$this->cart->addProduct($_product, $_infoRequest);
+								}
+								$this->cart->save();
+								$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
+								foreach($quoteItemsArr as $__quoteItem) {
+									try {
+										if (!$this->cart->getQuote()->getHasError()) {
+											$modelPdpquote = $this->_pdpquoteFactory->create();
+											$itemId = $__quoteItem->getItemId();
+											$dataItem = $modelPdpquote->loadByItemId($itemId);
+											if(!$dataItem->getPdpcartId()) {
+												$data = array(
+													'item_id' => $itemId,
+													'product_id' => $__quoteItem->getProductId(),
+													'pdp_product_id' => $pdpItem->getEntityId(),
+													'sku' => $pdpItem->getSku(),
+													'store_id' => $__quoteItem->getStoreId(),
+													'value' => serialize($dataOpt)
+												);
+												if($pdpItem->getDesignId()) {
+													$data['design_id'] = $pdpItem->getDesignId();
+												}
+												if($pdpItem->getDesignUrl()) {
+													$data['url'] = $pdpItem->getDesignUrl();
+												}
+												$modelPdpquote->addData($data);
+												$modelPdpquote->save();
+											}
+										}
+									} catch(\Magento\Framework\Exception\LocalizedException $e) {
+										$reponse->setStatus(false)
+												->setMessage(nl2br($e->getMessage()));
+										return $reponse;
+									}
+								}
+							} else {
+								$product->addCustomOption('additional_options', serialize($additionalOptions));
+								$this->cart->addProduct($product, $infoRequest);
+								$this->cart->save();
+								try {
+									if (!$this->cart->getQuote()->getHasError()) {
+										$modelPdpquote = $this->_pdpquoteFactory->create();
+										$itembypro = $this->cart->getQuote()->getItemByProduct($product);
+										if($itembypro != false) {
+											$itemId = $itembypro->getItemId();
+											$data = array(
+												'item_id' => $itemId,
+												'product_id' => $itembypro->getProductId(),
+												'pdp_product_id' => $pdpItem->getEntityId(),
+												'sku' => $pdpItem->getSku(),
+												'store_id' => $itembypro->getStoreId(),
+												'value' => serialize($dataOpt)
+											);
+											if($pdpItem->getDesignId()) {
+												$data['design_id'] = $pdpItem->getDesignId();
+											}
+											if($pdpItem->getDesignUrl()) {
+												$data['url'] = $pdpItem->getDesignUrl();
+											}
+											$dataItem = $modelPdpquote->loadByItemId($itemId);
+											if($dataItem->getPdpcartId()) {
+												$data['pdpcart_id'] = $dataItem->getPdpcartId();
+											}
+											$modelPdpquote->addData($data);
+											$modelPdpquote->save();									
+										}
+									}
+								} catch(\Magento\Framework\Exception\LocalizedException $e) {
+									$reponse->setStatus(false)
+											->setMessage(nl2br($e->getMessage()));
+									return $reponse;
+								}
+							}
 						}
+						//echo $this->cart->getQuote()->getId();die;
 					} catch(\Magento\Framework\Exception\LocalizedException $e) {
 						$reponse->setStatus(false)
 								->setMessage(nl2br($e->getMessage()));
@@ -230,7 +372,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					$url = $this->urlBuilder->getUrl('checkout/cart');
 					$reponse->setUrl($url)
 							->setStatus(true)
-							->setMessage('add product success');				
+							->setMessage('add product success');
 				} else {
 					$reponse->setStatus(false)
 							->setMessage('product add is not exists');
@@ -238,11 +380,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 			} else {
 				$reponse->setStatus(false)
 						->setMessage('post data failed');
-			}			
+			}
 		} else {
 			$reponse->setStatus(false)
 					->setMessage('post data failed, PDP Integration is not enable');
 		}
 		return $reponse;
-	}	
+	}
 }

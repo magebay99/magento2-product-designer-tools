@@ -256,14 +256,14 @@ class PdpOptions extends AbstractHelper {
 		$additionalOptions = array();
 		foreach($options as $key => $val) {
 			$item = array(
-				'label' => $val['title'],
+				'label' => __($val['title']),
 				'value' => ''
 			);
 			if(in_array($val['type'],$this->array_type_select)) {
 				$value = array();
 				foreach($val['values'] as $_key => $_val) {
 					if(intval($_val['checked']) && $_val['selected'] && !$_val['disabled']) {
-						$value[] = $_val['title'];
+						$value[] = __($_val['title']);
 					}
 				}
 				$item['value'] = implode(",", $value);
@@ -280,16 +280,31 @@ class PdpOptions extends AbstractHelper {
 	}
 	
 	/**
+	 * @param array $value
+	 * @return bolean
+	 */
+	protected function checkMultipleSize(array $value) {
+		if(isset($value['qnty_input']) && $value['qnty_input']) {
+			if(isset($value['type']) && $value['type'] == 'checkbox') {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
      * @param array $options
 	 *
 	 * @return array()
      */		
 	public function getOptionsSelect(array $options) {
+		$_result = array('multiSize'=>false, 'multiSizeOpt' => array(), 'options' => array());
 		$result = array();
 		$_key = 0;
 		foreach($options as $key => $val) {
 			if(!$val['disabled']) {
 				if(in_array($val['type'],$this->array_type_select)) {
+					$_result['multiSize'] = $this->checkMultipleSize($val);
 					$flag=false;
 					$optVal = array();
 					foreach($val['values'] as $opt_key => $opt_val) {
@@ -299,9 +314,16 @@ class PdpOptions extends AbstractHelper {
 						}
 					}
 					if($flag) {
-						$result[$_key] = $val;
-						$result[$_key]['values'] = $optVal;
-						$_key++;
+						if($_result['multiSize']) {
+							$_result['multiSizeOpt'] = $val;
+							$_result['multiSizeOpt']['values'] = $optVal;
+						} else {
+							$result[$_key] = $val;
+							$result[$_key]['values'] = $optVal;
+							$_key++;
+						}
+					} else {
+						$_result['multiSize'] = false;
 					}
 				} elseif($val['type'] == 'field' || $val['type'] == 'area') {
 					if($val['default_text']) {
@@ -313,7 +335,8 @@ class PdpOptions extends AbstractHelper {
 				}
 			}
 		}
-		return $result;
+		$_result['options'] = $result;
+		return $_result;
 	}
 	
     /**

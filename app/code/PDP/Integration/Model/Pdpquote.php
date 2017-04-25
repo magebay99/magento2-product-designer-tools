@@ -48,6 +48,17 @@ class Pdpquote extends \Magento\Framework\Model\AbstractModel
      * @param int $itemId
      * @return array
      */
+    public function loadByItemId($itemId)
+    {
+        $this->_getResource()->loadByItemId($this, $itemId);
+		return $this;
+    }
+	
+    /**
+     *
+     * @param int $itemId
+     * @return array
+     */
     public function _loadByItemId($itemId)
     {
         return $this->_getResource()->_loadByItemId($itemId);
