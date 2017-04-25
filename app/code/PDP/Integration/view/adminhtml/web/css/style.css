@@ -1,12 +1,23 @@
-.block-button a.edit-button{width:128px;height:35px;color:#ffffff;background-color:#36DAAA;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
- -webkit-border-radius: 3px; 
- -moz-border-radius: 3px;
- -o-border-radius: 3px;
- border-radius: 3px;margin:5px 0 0;
+.block-button a.edit-button{
+  border-radius: 3px;
+  background-color: rgb( 49, 181, 115 );
+  padding:0 15px;
+  height: 35px;
+  line-height: 35px;
+  z-index: 4;
+  font-size: 18px;
+  color: rgb( 255, 255, 255 );
+  display: inline-block;
 }
-.block-button a.zip-design{width:128px;height:35px;color:#ffffff;background-color:#00c0ff;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
- -webkit-border-radius: 3px; 
- -moz-border-radius: 3px;
- -o-border-radius: 3px;
- border-radius: 3px;margin:5px 0 0;
+.block-button a.zip-design{
+  border-radius: 3px;
+  margin:5px 5px;
+  background-color: rgb( 63, 188, 239 );
+  padding:0 15px;
+  height: 35px;
+  line-height: 35px;
+  z-index: 4;
+  font-size: 18px;
+  color: rgb( 255, 255, 255 );
+  display:inline-block;
 }

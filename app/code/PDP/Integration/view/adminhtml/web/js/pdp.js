@@ -24,7 +24,7 @@ define([
 					});
 			};
 			$(element).click(function(){
-				var url = config.url;
+				var url = config.url+'&zip=1';
 				if(url != '#') {
 					$.ajax({
 						url: url,
@@ -34,7 +34,11 @@ define([
 						},
 						success : function(_res) {
 						    $('body').trigger('processStop');
-							var res = $.parseJSON(_res);
+							if(typeof _res == 'object') {
+								var res = _res;
+							} else {
+								var res = $.parseJSON(_res);
+							}
 							var data = res.data;
 							if(res.status == 'success') {
 								var url_download = data.baseUrl+''+data.file;

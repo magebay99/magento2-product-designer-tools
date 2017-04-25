@@ -127,8 +127,8 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 			return $html;
 		}
 		$html .= '<div class="block-button">';
-			$html .= '<a class="zip-design" href="javascript:void(0)" data-mage-init=\'{"pdpzipdesign":{"url":"'.$this->getLinkZipDesign($designId).'"}}\' >'.__('Zip Design').'</a>';
-			$html .= '<a class="edit-button" target="_blank" href="'.$this->getLinkEditDesign($productId, $designId).'">'.__('Edit Design').'</a>';
+			$html .= '<a class="zip-design" href="javascript:void(0)" data-mage-init=\'{"pdpzipdesign":{"url":"'.$this->getLinkZipDesign($designId).'"}}\' >'.__('Download').'</a>';
+			$html .= '<a class="edit-button" target="_blank" href="'.$this->getLinkEditDesign($productId, $designId).'">'.__('Open Editor').'</a>';
 		$html .= '</div>';
 		return $html;
 	}

@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="PDP_Integration::css/style.css" />
+    </head>	
 	<body>
 		<referenceBlock name="order_items">
 			<block class="PDP\Integration\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer" as="pdpro" template="order/view/items/renderer/default.phtml">
