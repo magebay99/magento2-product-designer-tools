@@ -101,9 +101,15 @@ class Data extends AbstractHelper {
      * @return String
      */
 	public function getUrlToolDesign() {
-        return $this->scopeConfig->getValue(
+        $url = $this->scopeConfig->getValue(
             self::PATH_CONFIG_PATHPDP_TOOL,
             ScopeInterface::SCOPE_STORE
         );
+		if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+			$baseUrl = $this->_urlBuilder->getBaseUrl();
+			return $baseUrl.$url;
+		} else {
+			return $url;
+		}
 	}	
 }
