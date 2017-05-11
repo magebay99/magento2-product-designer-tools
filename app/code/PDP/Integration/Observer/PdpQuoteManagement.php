@@ -132,8 +132,7 @@ class PdpQuoteManagement implements ObserverInterface {
 						$pdp_print_type = $pdpValue['pdp_print_type'];
 					}
 					if(count($pdpOptions)) {
-						$_pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdpOptions);
-						$pdpOptSelect = $_pdpOptSelect['options'];
+						$pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdpOptions);
 						$additional_options = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
 					} else {
 						$additional_options = array();
@@ -161,19 +160,19 @@ class PdpQuoteManagement implements ObserverInterface {
 					$dataOrderItem = array();
 					if(isset($pdpItemArr['pdp_product_id'])) {
 						$dataOrderItem['product_id'] = $pdpItemArr['pdp_product_id'];
-						$pdpProductTypeModel = $this->_objectManager->get('PDP\Integration\Model\PdpProductType');
-						$pdpProductType = $pdpProductTypeModel->load($dataOrderItem['product_id']);
+						//$pdpProductTypeModel = $this->_objectManager->get('PDP\Integration\Model\PdpProductType');
+						//$pdpProductType = $pdpProductTypeModel->load($dataOrderItem['product_id']);
 					}
 					if(isset($pdpItemArr['design_id'])) {
 						$dataOrderItem['design_id'] = $pdpItemArr['design_id'];
 					}
-					if(isset($pdpItemArr['sku'])) {
+					/*if(isset($pdpItemArr['sku'])) {
 						$dataOrderItem['sku'] = $pdpItemArr['sku'];
 					}
 					if($item->getQtyOrdered()) {
 						$dataOrderItem['qty'] = $item->getQtyOrdered();
-					}
-					if(isset($pdpItemArr['value'])) {
+					}*/
+					/*if(isset($pdpItemArr['value'])) {
 						if(isset($pdpValue['pdp_options'])) {
 							$itemQty = 1;
 							if(isset($dataOrderItem['qty'])) {
@@ -196,8 +195,8 @@ class PdpQuoteManagement implements ObserverInterface {
 								}
 							}
 						}
-					}
-					if(isset($pdpProductType)) {
+					}*/
+					/*if(isset($pdpProductType)) {
 						if($pdpProductType->getBasePrice()) {
 							$dataOrderItem['base_price'] = $pdpProductType->getBasePrice();
 							if($itemPrice) {
@@ -209,7 +208,7 @@ class PdpQuoteManagement implements ObserverInterface {
 						if($pdpProductType->getTitle()) {
 							$dataOrderItem['name'] = $pdpProductType->getTitle();
 						}
-					}
+					}*/
 					if(count($dataOrderItem)) {
 						$_dataOrderItem[] = $dataOrderItem;
 					}
@@ -272,30 +271,28 @@ class PdpQuoteManagement implements ObserverInterface {
 		if($_flag) {
 			if($this->_customerSession->isLoggedIn()) {
 				$customerId = $this->_customerSession->getCustomerId();
-				if($customerId) {
+				$guestDesignModel = $this->_pdpGuestDesignFactory->create();
+				$dataGuestDesign = $guestDesignModel->loadByCustomerId($customerId);
+				if($dataGuestDesign->getEntityId()) {
 					try{
-						$guestDesignModel = $this->_pdpGuestDesignFactory->create();
-						$dataGuestDesign = $guestDesignModel->loadByCustomerId($customerId);
-						if($dataGuestDesign->getEntityId()) {
-							$dataItemValue = unserialize($dataGuestDesign->getItemValue());
-							$guestDesignId = $dataGuestDesign->getEntityId();
-							foreach($dataItemValue as $__key => $__itemValue) {
-								foreach($_dataOrderItem as $__orderItem) {
-									if($__orderItem['design_id'] == $__itemValue['design_id'] && $__orderItem['product_id'] == $__itemValue['pdp_product_id']) {
-										unset($dataItemValue[$__key]);
-										break;
-									}
+						$dataItemValue = unserialize($dataGuestDesign->getItemValue());
+						$guestDesignId = $dataGuestDesign->getEntityId();
+						foreach($dataItemValue as $__key => $__itemValue) {
+							foreach($_dataOrderItem as $__orderItem) {
+								if($__orderItem['design_id'] == $__itemValue['design_id'] && $__orderItem['product_id'] == $__itemValue['pdp_product_id']) {
+									unset($dataItemValue[$__key]);
+									break;
 								}
 							}
-							if(count($dataItemValue)) {
-								$guestDesignModel->load($guestDesignId)
-												 ->setItemValue(serialize($dataItemValue))
-												 ->save();
-							} else {
-								$guestDesignModel->load($guestDesignId)
-												 ->setIsActive(0)
-												 ->save();
-							}
+						}
+						if(count($dataItemValue)) {
+							$guestDesignModel->load($guestDesignId)
+											 ->setItemValue(serialize($dataItemValue))
+											 ->save();
+						} else {
+							$guestDesignModel->load($guestDesignId)
+											 ->setIsActive(0)
+											 ->save();
 						}
 						$this->_pdpIntegrationSession->setPdpDesignId(null);
 					} catch(\Exception $e) {
@@ -309,25 +306,23 @@ class PdpQuoteManagement implements ObserverInterface {
 					try{
 						$guestDesignModel = $this->_pdpGuestDesignFactory->create();
 						$dataGuestDesign = $guestDesignModel->load($pdpGuestDesignId);
-						$dataItemValue = unserialize($dataGuestDesign->getItemValue());
-						foreach($dataItemValue as $__key => $__itemValue) {
-							foreach($_dataOrderItem as $__orderItem) {
-								if($__orderItem['design_id'] == $__itemValue['design_id'] && $__orderItem['product_id'] == $__itemValue['pdp_product_id']) {
-									unset($dataItemValue[$__key]);
-									break;
+						if($dataGuestDesign->getEntityId()) {
+							$dataItemValue = unserialize($dataGuestDesign->getItemValue());
+							foreach($dataItemValue as $__key => $__itemValue) {
+								foreach($_dataOrderItem as $__orderItem) {
+									if($__orderItem['design_id'] == $__itemValue['design_id'] && $__orderItem['product_id'] == $__itemValue['pdp_product_id']) {
+										unset($dataItemValue[$__key]);
+										break;
+									}
 								}
 							}
-						}
-						if(count($dataItemValue)) {
-							$this->_pdpGuestDesignFactory->create()
-							       ->load($pdpGuestDesignId)
-								   ->setItemValue(serialize($dataItemValue))
-								   ->save();
-						} else {
-							$this->_pdpGuestDesignFactory->create()
-								  ->load($pdpGuestDesignId)
-								  ->setIsActive(0)
-								  ->save();
+							if(count($dataItemValue)) {
+							    $dataGuestDesign->setItemValue(serialize($dataItemValue))
+									   ->save();
+							} else {
+								$dataGuestDesign->setIsActive(0)
+									  ->save();
+							}
 						}
 						$this->_pdpIntegrationSession->setPdpDesignId(null);
 					} catch(\Exception $e) {

@@ -69,10 +69,10 @@ class loadGuestDesign implements ObserverInterface {
 						$_dataItemVal = unserialize($_dataGuestDesign->getItemValue());
 					}
 					$dataGuestDesign = $this->_pdpGuestDesignFactory->create()->loadByCustomerId($customerId);
-					if($dataGuestDesign->getEntityId() && !$_dataGuestDesign->getCustomerId() && $_dataGuestDesign->getCustomerIsGuest()) {
+					if($dataGuestDesign->getEntityId() && !$_dataGuestDesign->getCustomerId() && $_dataGuestDesign->getCustomerIsGuest() && $_dataGuestDesign->getEntityId()) {
 						try {
 							$this->_pdpGuestDesignFactory->create()->setId($pdpGuestDesignId)->delete();
-							$this->_pdpIntegrationSession->setPdpDesignId(null);
+							//$this->_pdpIntegrationSession->setPdpDesignId(null);
 						} catch(\Exception $e) {
 							$this->messageManager->addException($e, __('Load guest design error'));
 						}
@@ -84,11 +84,13 @@ class loadGuestDesign implements ObserverInterface {
 						}
 						$dataGuestDesign->setItemValue(serialize($dataItemVal))->save();									
 					} else {
-						$this->_pdpGuestDesignFactory->create()
-						                             ->load($pdpGuestDesignId)
-						                             ->setCustomerIsGuest(0)
-													 ->setCustomerId($customerId)
-													 ->save();
+						if($_dataGuestDesign->getEntityId()) {
+							$this->_pdpGuestDesignFactory->create()
+														 ->load($pdpGuestDesignId)
+														 ->setCustomerIsGuest(0)
+														 ->setCustomerId($customerId)
+														 ->save();
+						}
 					}
 				} catch(\Exception $e) {
 					$this->messageManager->addException($e, __('Load guest design error'));
