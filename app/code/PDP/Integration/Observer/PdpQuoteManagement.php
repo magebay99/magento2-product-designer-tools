@@ -132,7 +132,8 @@ class PdpQuoteManagement implements ObserverInterface {
 						$pdp_print_type = $pdpValue['pdp_print_type'];
 					}
 					if(count($pdpOptions)) {
-						$pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdpOptions);
+						$_pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdpOptions);
+						$pdpOptSelect = $_pdpOptSelect['options'];
 						$additional_options = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
 					} else {
 						$additional_options = array();
