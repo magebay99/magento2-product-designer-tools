@@ -78,32 +78,8 @@ class Pdpquote extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         );
 
         return $adapter->fetchCol($select);
-    }	
-    /**
-     * Retrieve select object for load object data
-     *
-     * @param string $field
-     * @param mixed $value
-     * @param \Magento\Framework\Model\AbstractModel $object
-     * @return \Magento\Framework\DB\Select
-     */
-    protected function _getLoadSelect($field, $value, $object)
-    {
-        $select = parent::_getLoadSelect($field, $value, $object);
-        $storeIds = $object->getSharedStoreIds();
-        if ($storeIds) {
-            if ($storeIds != ['*']) {
-                $select->where('store_id IN (?)', $storeIds);
-            }
-        } else {
-            /**
-             * For empty result
-             */
-            $select->where('store_id < ?', 0);
-        }
+    }
 
-        return $select;
-    }	
     public function loadByItemId($quote, $itemId)
     {
         $connection = $this->getConnection();

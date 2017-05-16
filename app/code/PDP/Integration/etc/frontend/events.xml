@@ -5,6 +5,9 @@
 		<observer name="pdpitemprice" instance="PDP\Integration\Observer\PdpItemPrice" />
 	</event>
     <event name="customer_login">
-        <observer name="pdp_customer_login" instance="PDP\Integration\Observer\loadGuestDesign" />
+        <observer name="pdp_customer_login" instance="PDP\Integration\Observer\LoadGuestDesign" />
     </event>
+	<event name="load_customer_quote_before">
+		<observer name="pdp_load_customer_quote" instance="PDP\Integration\Observer\LoadCustomerQuote" />
+	</event>
 </config>

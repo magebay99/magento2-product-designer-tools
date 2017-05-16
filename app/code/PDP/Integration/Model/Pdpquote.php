@@ -35,7 +35,7 @@ class Pdpquote extends \Magento\Framework\Model\AbstractModel
 	 * param array $fieldSelect
 	 * @return array $data
 	 **/
-	function getPdpOptions($pdpcartId,$fieldSelect = array('*'))
+	public function getPdpOptions($pdpcartId,$fieldSelect = array('*'))
 	{
 		$collection = $this->getCollection()
 			->addFieldToSelect($fieldSelect)

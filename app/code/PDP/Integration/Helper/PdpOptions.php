@@ -118,6 +118,28 @@ class PdpOptions extends AbstractHelper {
 	}
 	
 	/**
+	 * @param array $newOptions
+	 * @param array $prevOptions
+	 * @return array
+	 */
+    public function comparisonArrays($newOptions, $prevOptions) {
+        $diffOptions = array();
+        foreach ($newOptions as $key=>$op) {
+            if (isset($prevOptions[$key])) {
+                if (is_array($op)) {
+                    $result = $this->comparisonArrays($op, $prevOptions[$key]);
+                    if ($result) $diffOptions[$key] = $result;
+                } else {
+                    if ($prevOptions[$key]!=$op) $diffOptions[$key] = $op;
+                }
+            } else {
+                $diffOptions[$key] = $op;
+            }
+        }
+        return $diffOptions;
+    }
+	
+	/**
 	 * @param string $sku
 	 * @return String
 	 */
