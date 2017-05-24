@@ -5,17 +5,34 @@
 .product-detail .product-image{float:left;margin-right:17px;}
 .my-customized-design table.table-product-item td{color:#313131;}
 .my-customized-design table.table-product-item td .item-status{color:#00C0FF;font-size:16px;font-weight:bold;text-transform:capitalize}
-.block-button a.edit-button{width:128px;height:35px;color:#ffffff;background-color:#36DAAA;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
- -webkit-border-radius: 3px; 
- -moz-border-radius: 3px;
- -o-border-radius: 3px;
- border-radius: 3px;margin:18px 0 0;
+.block-button a.edit-button {
+    border-radius: 3px;
+    background-color: #31b573;
+    padding: 0 15px;
+    height: 35px;
+    line-height: 35px;
+    z-index: 4;
+    font-size: 15px;
+    color: #fff;
+    display: inline-block;
+    width: 130px;
+    white-space: nowrap;
+    text-align: center;
 }
-.block-button a.zip-design{width:128px;height:35px;color:#ffffff;background-color:#00c0ff;display:block;font-size:13px;line-height:35px;text-align:center;text-transform:uppercase;
- -webkit-border-radius: 3px; 
- -moz-border-radius: 3px;
- -o-border-radius: 3px;
- border-radius: 3px;margin:18px 0 0;
+.block-button a.zip-design {
+    border-radius: 3px;
+    margin: 5px 5px;
+    background-color: #3fbcef;
+    padding: 0 15px;
+    height: 35px;
+    line-height: 35px;
+    z-index: 4;
+    font-size: 15px;
+    color: #fff;
+    width: 130px;
+    display: inline-block;
+    margin: 10px 0px;
+    text-align: center;
 }
 td.col-custom-design ul li.item{display:inline-block; margin:0 5px 5px 0;}
 td.col-custom-design ul li.last{margin-right:0;}
