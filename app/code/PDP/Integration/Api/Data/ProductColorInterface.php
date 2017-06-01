@@ -13,6 +13,8 @@ interface ProductColorInterface extends \Magento\Framework\Api\ExtensibleDataInt
 	
     const COLOR_CODE = 'color_code';
 	
+	const COLOR_PRICE = 'color_price';
+	
     const COLOR_NAME = 'color_name';
 	
     /**
@@ -44,6 +46,21 @@ interface ProductColorInterface extends \Magento\Framework\Api\ExtensibleDataInt
      * @return $this
      */
     public function setColorCode($colorCode);
+	
+    /**
+     * Returns the color price.
+     *
+     * @return float|null color price. Otherwise, null.
+     */
+    public function getColorPrice();
+
+    /**
+     * Sets the color price.
+     *
+     * @param string $colorPrice
+     * @return $this
+     */
+    public function setColorPrice($colorPrice);
 
     /**
      * Returns the color name.

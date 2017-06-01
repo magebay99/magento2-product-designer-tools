@@ -45,6 +45,25 @@ class ProductColor extends AbstractExtensibleObject implements ProductColorInter
 	}
 	
     /**
+     * Returns the color price.
+     *
+     * @return float|null color price. Otherwise, null.
+     */
+    public function getColorPrice() {
+		return $this->_get(self::COLOR_PRICE);
+	}
+	
+    /**
+     * Sets the color price.
+     *
+     * @param string $colorPrice
+     * @return $this
+     */
+    public function setColorPrice($colorPrice) {
+		return $this->setData(self::COLOR_PRICE, $colorPrice);
+	}
+	
+    /**
      * Returns the color name.
      *
      * @return string|null color name. Otherwise, null.
