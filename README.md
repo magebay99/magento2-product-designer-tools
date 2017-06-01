@@ -9,16 +9,6 @@ Helpful links:
 - Pricing https://goo.gl/vq7LIr
 - Help Center https://goo.gl/fWjkKz
 
-# Module Connector for other e-commerce platform
-
-- Magento 2.X Connector https://goo.gl/zxpHbJ
-- Magento 1.X Connector https://goo.gl/lg3v4g
-- Woocommerce Connector https://goo.gl/3bQ1Br
-- Shopify Connector https://goo.gl/1OmgM3
-- Prestashop Connector https://goo.gl/SHG4RR
-- Opencart Connector https://goo.gl/GEJ3Nk
-- Nopcommerce Connector https://goo.gl/GEJ3Nk
-
 # Free download The Magento2 Connector plugin for Online Product Designer Tools 
 - The Magento2 Connector plugin will connect Magento with Product Designer Pro system https://goo.gl/AFlnBQ
 - Manage order and export all customized designs from Magento Backend (Export and Edit customized design from customer's order details)
@@ -63,5 +53,14 @@ Helpful links:
 After products are pushed succesful, all these items status will be change to LIVE in #PDP, and ready for sell on Magento 2.
 
 
+# Module Connector for other e-commerce platform
+
+- Magento 2.X Connector https://goo.gl/zxpHbJ
+- Magento 1.X Connector https://goo.gl/lg3v4g
+- Woocommerce Connector https://goo.gl/3bQ1Br
+- Shopify Connector https://goo.gl/1OmgM3
+- Prestashop Connector https://goo.gl/SHG4RR
+- Opencart Connector https://goo.gl/GEJ3Nk
+- Nopcommerce Connector https://goo.gl/GEJ3Nk
 
 
