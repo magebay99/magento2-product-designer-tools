@@ -115,7 +115,21 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 		}
 		return $url;
 	}
-	
+
+    /**
+     * @param int $pid
+     * @param int $tid
+     * @return string
+     */
+	public function getLinkUpdateSvgDesign($pid,$tid)
+    {
+        $urlEdit = $this->getLinkEditDesign($pid, $tid);
+        $urlUpdateSvg = str_replace('tid', 'export-design', $urlEdit);
+        $urlUpdateSvg = $urlUpdateSvg . '&force-update-svg=1';
+
+        return $urlUpdateSvg;
+    }
+
 	/**
 	 * @param int $productId
 	 * @param int $designId
@@ -127,7 +141,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 			return $html;
 		}
 		$html .= '<div class="block-button">';
-			$html .= '<a class="zip-design" href="javascript:void(0)" data-mage-init=\'{"pdpzipdesign":{"url":"'.$this->getLinkZipDesign($designId).'"}}\' >'.__('Download').'</a>';
+			$html .= '<a class="zip-design" href="javascript:void(0)" data-mage-init=\'{"pdpzipdesign":{"url":"'.$this->getLinkZipDesign($designId).'","update-svg-url":"'.$this->getLinkUpdateSvgDesign($productId,$designId).'"}}\' >'.__('Download').'</a>';
 			$html .= '<a class="edit-button" target="_blank" href="'.$this->getLinkEditDesign($productId, $designId).'">'.__('Open Editor').'</a>';
 		$html .= '</div>';
 		return $html;

@@ -197,11 +197,14 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 				$urlTool = $this->_pdpOptions->getUrlToolDesign();
 				$designId = 0;
 				$urlEdit = '#';
+				$urlUpdateSvg = '#';
 				$itemId = $item->getQuoteItemId();
 				$pdpQuoteData = $this->_pdpOptions->getPdpCartItem($itemId);
 				if(count($pdpQuoteData)) {
 					$urlEdit = $pdpQuoteData[0]['url'];
 					$designId = $pdpQuoteData[0]['design_id'];
+					$urlUpdateSvg = str_replace('tid', 'export-design', $urlEdit);
+					$urlUpdateSvg = $urlUpdateSvg . '&force-update-svg=1';
 				}
 				$param = '';
 				if($designId) {
@@ -219,7 +222,7 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 				$html .= '</span>';
 				$html .= '<div class="block-button">';
 					if($this->getStatus() == 'complete') {
-						$html .= '<a class="zip-design" href="javascript:void(0)" data-href="'.$urlTool.'">'.__('Zip Design').'</a>';
+						$html .= '<a class="zip-design" href="javascript:void(0)" data-href="'.$urlTool.'" data-editor-uri="' . $urlUpdateSvg . '">'.__('Zip Design').'</a>';
 					}
 					$html .= '<a class="edit-button" href="'.$urlEdit.'">'.__('Edit Design').'</a>';
 				$html .= '</div>';
