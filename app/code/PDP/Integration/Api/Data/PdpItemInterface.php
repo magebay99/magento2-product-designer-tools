@@ -27,6 +27,11 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
     const PDP_PRODUCT_COLOR = 'product_color';
 	
 	/*
+	 * pdp custom size
+	 */
+	const PDP_CUSTOM_SIZE = 'custom_size';
+	
+	/*
      * pdp option.
      */
     const PDP_OPTIONS = 'pdp_options';
@@ -152,6 +157,19 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return $this
      */
     public function setProductColor(\PDP\Integration\Api\Data\ProductColorInterface $productColor);
+	
+	/**
+	 * Gets the pdp custom size
+	 * @return \PDP\Integration\Api\Data\CustomSizeInterface $customSize|null
+	 */
+	public function getCustomSize();
+	
+	/**
+	 * Sets the custom size
+	 * @param \PDP\Integration\Api\Data\CustomSizeInterface $customSize
+	 * @return $this
+	 */
+	public function setCustomSize(\PDP\Integration\Api\Data\CustomSizeInterface $customSize);
 
     /**
      * Gets the pdp options.

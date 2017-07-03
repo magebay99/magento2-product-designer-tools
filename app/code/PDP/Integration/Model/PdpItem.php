@@ -157,6 +157,24 @@ class PdpItem extends AbstractExtensibleObject implements PdpItemInterface {
 		return $this->setData(self::PDP_PRODUCT_COLOR, $productColor);
 	}
 	
+	/**
+	 * Gets the custom size
+	 *
+	 * @return \PDP\Integration\Api\Data\CustomSizeInterface $customSize|null
+	 */
+	public function getCustomSize() {
+		return $this->_get(self::PDP_CUSTOM_SIZE);
+	}
+	
+	/**
+	 * Sets the custom size
+	 * @param \PDP\Integration\Api\Data\CustomSizeInterface $customSize
+	 * @return this
+	 */
+	public function setCustomSize(\PDP\Integration\Api\Data\CustomSizeInterface $customSize) {
+		return $this->setData(self::PDP_CUSTOM_SIZE, $customSize);
+	}
+	
     /**
      * Gets the pdp options.
      *

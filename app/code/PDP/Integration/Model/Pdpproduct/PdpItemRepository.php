@@ -119,7 +119,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		$postDataArr = $pdpItem->__toArray();
 		$reponse = $this->pdpReponseFactory->create();		
 		if($this->_pdpOptions->statusPdpIntegration()) {
-			if($pdpItem->getEntityId() && $pdpItem->getSku()) {
+			if(($pdpItem->getEntityId() && $pdpItem->getSku()) || ($pdpItem->getSku() && $pdpItem->getCustomSize() != null)) {
 				$product = $this->productRepository->get($pdpItem->getSku());
 				if($product->getTypeId()) {
 					$dataOpt = array();
@@ -152,6 +152,22 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					if($pdpItem->getDesignId()) {
 						$infoRequest['design_id'] = $pdpItem->getDesignId();
 						$additionalOptions[] = array('label' => 'Design Id', 'value' => 'pdp_design_id'.$pdpItem->getDesignId());
+					}
+					if($pdpItem->getCustomSize() != null) {
+						$customSize = $pdpItem->getCustomSize();
+						$unit = $customSize->getUnit();
+						if($customSize->getHeight()) {
+							$infoRequest['custom_size_height'] = $customSize->getHeight();
+							$additionalOptions[] = array('label' => __('Height'), 'value' => $customSize->getHeight().$unit);
+						}
+						if($customSize->getWidth()) {
+							$infoRequest['custom_size_width'] = $customSize->getWidth();
+							$additionalOptions[] = array('label' => __('Width'), 'value' => $customSize->getWidth().$unit);
+						}
+						if($customSize->getSizeLayout()) {
+							$infoRequest['custom_size_layout'] = $customSize->getSizeLayout();
+							$additionalOptions[] = array('label' => __('Size layout'), 'value' => $customSize->getSizeLayout());
+						}
 					}
 					if(isset($dataOpt['product_color']['color_price']) && $dataOpt['product_color']['color_price']) {
 						$color_price = $dataOpt['product_color']['color_price'];

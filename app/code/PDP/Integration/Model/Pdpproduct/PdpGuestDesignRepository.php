@@ -83,16 +83,20 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
     {
 		$reponse = $this->pdpReponseFactory->create();
 		if($this->_pdpOptions->statusPdpIntegration()) {
-			if($pdpDesignItem->getDesignId() && $pdpDesignItem->getProductId() && $pdpDesignItem->getProductSku()) {
+			if($pdpDesignItem->getDesignId() && $pdpDesignItem->getProductSku()) {
 				$product = $this->productRepository->get($pdpDesignItem->getProductSku());
 				if($product->getTypeId()) {
 					$modelGuestDesign = $this->_pdpGuestDesignFactory->create();
 					$dataGuestDesign = array();
 					$itemValue = array(
 						'product_id' => $product->getEntityId(),
-						'pdp_product_id' => $pdpDesignItem->getProductId(),
 						'design_id' => $pdpDesignItem->getDesignId()
 					);
+					if( $pdpDesignItem->getProductId() ) {
+						$itemValue['pdp_product_id'] = $pdpDesignItem->getProductId();
+					} else {
+						$itemValue['pdp_product_id'] = $product->getEntityId();
+					}
 					if($this->_customerSession->isLoggedIn()) {
 						$customerId = $this->_customerSession->getCustomerId();
 						$pdpGuestDesignId = $this->_pdpIntegrationSession->getPdpDesignId();
