@@ -168,6 +168,9 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 							$infoRequest['custom_size_layout'] = $customSize->getSizeLayout();
 							$additionalOptions[] = array('label' => __('Size layout'), 'value' => $customSize->getSizeLayout());
 						}
+						$pdpProductId = $product->getEntityId();
+					} else {
+						$pdpProductId = $pdpItem->getEntityId();
 					}
 					if(isset($dataOpt['product_color']['color_price']) && $dataOpt['product_color']['color_price']) {
 						$color_price = $dataOpt['product_color']['color_price'];
@@ -241,7 +244,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												$data = array(
 													'item_id' => $itemId,
 													'product_id' => $__quoteItem->getProductId(),
-													'pdp_product_id' => $pdpItem->getEntityId(),
+													'pdp_product_id' => $pdpProductId,
 													'sku' => $pdpItem->getSku(),
 													'store_id' => $__quoteItem->getStoreId(),
 													'value' => serialize($dataOpt)
@@ -275,7 +278,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 											$data = array(
 												'item_id' => $itemId,
 												'product_id' => $itembypro->getProductId(),
-												'pdp_product_id' => $pdpItem->getEntityId(),
+												'pdp_product_id' => $pdpProductId,
 												'sku' => $pdpItem->getSku(),
 												'store_id' => $itembypro->getStoreId(),
 												'value' => serialize($dataOpt)
@@ -326,7 +329,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												$data = array(
 													'item_id' => $itemId,
 													'product_id' => $__quoteItem->getProductId(),
-													'pdp_product_id' => $pdpItem->getEntityId(),
+													'pdp_product_id' => $pdpProductId,
 													'sku' => $pdpItem->getSku(),
 													'store_id' => $__quoteItem->getStoreId(),
 													'value' => serialize($dataOpt)
@@ -360,7 +363,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 											$data = array(
 												'item_id' => $itemId,
 												'product_id' => $itembypro->getProductId(),
-												'pdp_product_id' => $pdpItem->getEntityId(),
+												'pdp_product_id' => $pdpProductId,
 												'sku' => $pdpItem->getSku(),
 												'store_id' => $itembypro->getStoreId(),
 												'value' => serialize($dataOpt)

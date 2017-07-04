@@ -166,6 +166,8 @@ class PdpOptions extends AbstractHelper {
 			}
 			if($proId) {
 				$url = $this->getUrlToolDesign().'/?pid='.$proId;
+			} elseif( strpos($sku,'CustomDismensionProd') !== false ) {
+				$url = $this->getUrlToolDesign().'/?width=594&height=420&unit=mm&size_layout=Landscape&custom=1';
 			}
 		}
 		return $url;

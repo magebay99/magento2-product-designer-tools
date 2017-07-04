@@ -155,7 +155,9 @@ class LoadGuestDesign implements ObserverInterface {
 								$proId = $value['type_id'];
 							}
 						}
-						if($proId) {
+						$product = $item->getProduct();
+						if($product->getTypeId() == 'pdpro') {
+							if(!$proId) $proId = $item->getProductId();
 							$requestOptions = $item->getBuyRequest();
 							foreach($dataObjQuoteItem as $_key => $dataQuote) {
 								if($requestOptions->getDesignId() == $dataQuote['design_id'] && $item->getProductId() == $dataQuote['product_id'] && $proId == $dataQuote['pdp_product_id']) {
