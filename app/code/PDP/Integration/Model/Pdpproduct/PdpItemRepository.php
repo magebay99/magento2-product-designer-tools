@@ -2,12 +2,14 @@
 namespace PDP\Integration\Model\Pdpproduct;
 
 use PDP\Integration\Api\PdpItemRepositoryInterface;
+use PDP\Integration\Helper\CorsResponseHelper;
 use PDP\Integration\Model\PdpproductFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use PDP\Integration\Api\Data\PdpItemInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Checkout\Model\Cart as CustomerCart;
+use PDP\Integration\Plugin\CorsHeadersPlugin;
 
 class PdpItemRepository implements PdpItemRepositoryInterface {
 
@@ -66,21 +68,35 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
     /**
      * @var \Magento\Catalog\Model\ProductFactory
      */
-    protected $productFactory;	
+    protected $productFactory;
 
-	/**
-     * @param DataObjectFactory $objectFactory
-     * @param Pdpproduct $pdpproduct
+    /** @var  \Magento\Framework\Webapi\Rest\Response */
+    protected $_response;
+
+    /**
+     * CORS Response Helper . Add Headers to Response Object
+     *
+     * @var \PDP\Integration\Helper\CorsResponseHelper
+     */
+    private $_corsResponseHelper;
+
+
+    /**
+     * PdpItemRepository constructor.
+     *
+     * @param \Magento\Framework\DataObject\Factory                $objectFactory
      * @param \PDP\Integration\Api\Data\PdpReponseInterfaceFactory $pdpReponseFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param ProductRepositoryInterface $productRepository
-	 * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
-	 * @param \PDP\Integration\Model\PdpquoteFactory $pdpquoteFactory
-	 * @param CustomerCart $cart
-	 * @param \PDP\Integration\Model\Session $pdpIntegrationSession
-     * @param PdpproductFactory $pdpproductFactory
-     * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Magento\Store\Model\StoreManagerInterface           $storeManager
+     * @param \Magento\Framework\UrlInterface                      $urlBuilder
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface      $productRepository
+     * @param \PDP\Integration\Helper\PdpOptions                   $pdpOptions
+     * @param \PDP\Integration\Model\PdpquoteFactory               $pdpquoteFactory
+     * @param \PDP\Integration\Model\Session                       $pdpIntegrationSession
+     * @param \Magento\Checkout\Model\Cart                         $cart
+     * @param \PDP\Integration\Model\PdpproductFactory             $pdpproductFactory
+     * @param \Magento\Catalog\Model\ProductFactory                $productFactory
+     * @param \Magento\Framework\Webapi\Rest\Response              $response
+     * @param \PDP\Integration\Helper\CorsResponseHelper           $corsResponseHelper
      */
     public function __construct(
         DataObjectFactory $objectFactory,
@@ -93,7 +109,9 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		\PDP\Integration\Model\Session $pdpIntegrationSession,		
 		CustomerCart $cart,		
         PdpproductFactory $pdpproductFactory,
-		\Magento\Catalog\Model\ProductFactory $productFactory
+		\Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Framework\Webapi\Rest\Response $response,
+        CorsResponseHelper $corsResponseHelper
     ) {
         $this->objectFactory = $objectFactory;
 		$this->pdpReponseFactory = $pdpReponseFactory;
@@ -106,12 +124,14 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		$this->cart = $cart;		
         $this->_pdpproductFactory = $pdpproductFactory;
 		$this->productFactory = $productFactory;
+		$this->_response = $response;
+		$this->_corsResponseHelper = $corsResponseHelper;
     }
 	
     /**
      * Perform persist operations for one entity
      *
-     * @param PdpItemInterface $entity
+     * @param PdpItemInterface $pdpItem
      * @return \PDP\Integration\Api\Data\PdpReponseInterface
      */
     public function save(\PDP\Integration\Api\Data\PdpItemInterface $pdpItem)
@@ -412,6 +432,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 			$reponse->setStatus(false)
 					->setMessage('post data failed, PDP Integration is not enable');
 		}
+		$this->_response = $this->_corsResponseHelper->addCorsHeaders($this->_response);
 		return $reponse;
 	}
 }

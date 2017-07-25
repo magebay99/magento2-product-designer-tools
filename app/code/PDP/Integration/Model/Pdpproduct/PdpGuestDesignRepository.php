@@ -6,6 +6,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use PDP\Integration\Api\Data\PdpDesignItemInterface;
+use PDP\Integration\Helper\CorsResponseHelper;
+use PDP\Integration\Plugin\CorsHeadersPlugin;
 
 class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 	
@@ -45,16 +47,36 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
      * @var \Magento\Customer\Model\Session
      */
     protected $_customerSession;
-	
-	/**
-	 * @param DataObjectFactory $objectFactory
-	 * @param ProductRepositoryInterface $productRepository
-	 * @param \PDP\Integration\Model\PdpGuestDesignFactory $pdpGuestDesignFactory
-	 * @param \PDP\Integration\Api\Data\PdpReponseInterfaceFactory $pdpReponseFactory
-	 * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
-	 * @param \PDP\Integration\Model\Session $pdpIntegrationSession
-	 * @param \Magento\Customer\Model\Session $customerSession
-	 */
+
+
+    /**
+     * Magento HTTP Response Object
+     *
+     * @var  \Magento\Framework\Webapi\Rest\Response
+     * @since 2.0.3
+     */
+    protected $_response;
+
+    /**
+     * CORS Response Helper . Add Headers to Response Object
+     *
+     * @var \PDP\Integration\Helper\CorsResponseHelper
+     * @since 2.0.3
+     */
+    private $_corsResponseHelper;
+
+    /**
+     * @param DataObjectFactory                                    $objectFactory
+     * @param ProductRepositoryInterface                           $productRepository
+     * @param \PDP\Integration\Model\PdpGuestDesignFactory         $pdpGuestDesignFactory
+     * @param \PDP\Integration\Api\Data\PdpReponseInterfaceFactory $pdpReponseFactory
+     * @param \PDP\Integration\Helper\PdpOptions                   $pdpOptions
+     * @param \PDP\Integration\Model\Session                       $pdpIntegrationSession
+     * @param \Magento\Customer\Model\Session                      $customerSession
+     * @param \Magento\Framework\Webapi\Rest\Response              $response
+     * @param \PDP\Integration\Helper\CorsResponseHelper           $corsResponseHelper
+     * @internal param \PDP\Integration\Plugin\CorsHeadersPlugin $corsHeadersPlugin
+     */
 	public function __construct(
 		DataObjectFactory $objectFactory,
 		ProductRepositoryInterface $productRepository,
@@ -62,7 +84,9 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 		\PDP\Integration\Api\Data\PdpReponseInterfaceFactory $pdpReponseFactory,
 		\PDP\Integration\Helper\PdpOptions $pdpOptions,
 		\PDP\Integration\Model\Session $pdpIntegrationSession,
-		\Magento\Customer\Model\Session $customerSession
+		\Magento\Customer\Model\Session $customerSession,
+        \Magento\Framework\Webapi\Rest\Response $response,
+        CorsResponseHelper $corsResponseHelper
 	) {
 		$this->objectFactory = $objectFactory;
 		$this->productRepository = $productRepository;
@@ -71,12 +95,15 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 		$this->_pdpOptions = $pdpOptions;
 		$this->_pdpIntegrationSession = $pdpIntegrationSession;
 		$this->_customerSession = $customerSession;
+		/* Inject Magento Response , Request Object */
+		$this->_response = $response;
+        $this->_corsResponseHelper = $corsResponseHelper;
 	}
 	
     /**
      * Perform persist operations for one entity
      *
-     * @param PdpDesignItemInterface $entity
+     * @param PdpDesignItemInterface $pdpDesignItem
      * @return \PDP\Integration\Api\Data\PdpReponseInterface
      */
     public function save(\PDP\Integration\Api\Data\PdpDesignItemInterface $pdpDesignItem)
@@ -282,7 +309,17 @@ class PdpGuestDesignRepository implements PdpGuestDesignRepositoryInterface {
 			$reponse->setStatus(false)
 					->setMessage('post data failed, PDP Integration is not enable');
 		}
-		
-		return $reponse;
+        $this->_corsResponseHelper->addCorsHeaders($this->_response);
+        return $reponse;
 	}
+
+    /**
+     * @return string
+     * @since 2.0.3
+     */
+	public function checkCORS()
+    {
+        $this->_corsResponseHelper->addCorsHeaders($this->_response);
+        return '';
+    }
 }

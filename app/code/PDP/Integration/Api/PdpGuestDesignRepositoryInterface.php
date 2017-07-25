@@ -6,10 +6,16 @@ namespace PDP\Integration\Api;
  * @api
  */
 interface PdpGuestDesignRepositoryInterface {
-	
+
 	/**
 	 * @param \PDP\Integration\Api\Data\PdpDesignItemInterface $pdpDesignItem .
 	 * @return \PDP\Integration\Api\Data\PdpReponseInterface
 	 */
 	public function save(\PDP\Integration\Api\Data\PdpDesignItemInterface $pdpDesignItem);
+
+    /**
+     * @return string
+     * @since 2.0.3
+     */
+	public function checkCORS();
 } 

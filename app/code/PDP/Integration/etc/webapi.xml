@@ -8,10 +8,22 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/pdpintegration/add" method="GET">
+      <service class="PDP\Integration\Api\PdpGuestDesignRepositoryInterface" method="checkCORS"/>
+      <resources>
+        <resource ref="anonymous" />
+      </resources>
+    </route>
+    <route url="/V1/pdpintegration/guest-design" method="GET">
+        <service class="PDP\Integration\Api\PdpGuestDesignRepositoryInterface" method="checkCORS"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
     <route url="/V1/pdpintegration/guest-design" method="POST">
         <service class="PDP\Integration\Api\PdpGuestDesignRepositoryInterface" method="save"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
-    </route>	
+    </route>
 </routes>
