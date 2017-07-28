@@ -5,5 +5,8 @@
 		<referenceBlock name="shipment_items">
 			<block class="PDP\Integration\Block\Adminhtml\Items\Renderer\DefaultRenderer" as="pdpro" template="view/items/renderer/default.phtml"/>
 		</referenceBlock>
+		<referenceContainer name="before.body.end">
+			<block class="Magento\Framework\View\Element\Template" name="moreinfo.popup.additional" template="PDP_Integration::default.phtml"/>
+		</referenceContainer>
 	</body>
 </page>

@@ -12,6 +12,8 @@
 	<preference for="PDP\Integration\Api\Data\PdpDesignItemInterface" type="PDP\Integration\Model\PdpDesignItem"/>
 	<preference for="PDP\Integration\Api\Data\ProductColorInterface" type="PDP\Integration\Model\ProductColor"/>
 	<preference for="PDP\Integration\Api\Data\CustomSizeInterface" type="PDP\Integration\Model\CustomSize"/>
+	<preference for="PDP\Integration\Api\Data\MultiSizeInterface" type="PDP\Integration\Model\MultiSize"/>
+	<preference for="PDP\Integration\Api\Data\PriceMultiSizeInterface" type="PDP\Integration\Model\PriceMultiSize"/>
 	<type name="Magento\Sales\Model\Config">
         <plugin name="PDP_Integration_Model_Sales_Plugin_Config"
                 type="PDP\Integration\Model\Sales\Plugin\Config"

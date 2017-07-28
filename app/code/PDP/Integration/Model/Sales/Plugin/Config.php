@@ -5,7 +5,7 @@ class Config
 {
 	public function afterGetAvailableProductTypes($subject, $result)
     {
-		$result[] = 'pdpro';
+		$result[] = \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE;
         return $result;
     }
 }

@@ -46,10 +46,11 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
 		if(count($pdpCart)) {
 			$urlTool = $this->_pdpOptions->getUrlToolDesign();
 			$designId = $pdpCart[0]['design_id'];
+			$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
 			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
-				$html = '<span style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</span>';
+				$html .= '<span style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</span>';
 				$html .= '<ul class="items">';
 				$i=0;
 				foreach($sideThubms as $sideThub) {
@@ -64,6 +65,50 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
 		}
 		return $html;
 	}
+	
+	/**
+	 * @param String $value
+	 * @param \Magento\Framework\DataObject|Item $item
+	 * @return String
+	 */
+	protected function getHtmlNameNumber($value, \Magento\Framework\DataObject $item) {
+		$_value = unserialize($value);
+		if(isset($_value['multi_size'])) {
+			$html = '<div class="block-name-num">';
+			$html .= '<span>'.__('Name & Number').': <i id="name-num-'.$item->getQuoteItemId().'" data-itemid="'.$item->getQuoteItemId().'" 
+			data-mage-init=\'{"moreinfo":{"template_id":"#name-num'.$item->getQuoteItemId().'-template", "title": "'.__('Name & Number').'"}}\'
+			class="more-info-name-num">more info</i></span>';
+			$html .= '<script id="name-num'.$item->getQuoteItemId().'-template" type="x-magento-template">';
+				$html .= '<div class="block-namenum">';
+					$html .='<table class="data-grid data table">';
+						$html .= '<thead>';
+							$html .= '<tr>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Name').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Num').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Size').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Qty').'</th>';
+							$html .= '</tr>';
+							$html .= '<tr>';
+						$html .= '</thead>';
+						$html .= '<tbody>';
+							foreach($_value['multi_size'] as $_item) {
+								$html .= '<tr>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['name'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['num'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['size'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['qty'].'</td>';
+								$html .= '</tr>';
+							}
+						$html .= '</tbody>';
+					$html .= '</table>';
+				$html .= '</div>';
+			$html .= '</script>';
+			$html .="</div>";
+		} else {
+			$html = '';
+		}
+		return $html;
+	}	
 	
 	/**
 	 * @return String

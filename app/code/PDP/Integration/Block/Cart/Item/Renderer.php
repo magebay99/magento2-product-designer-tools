@@ -74,7 +74,7 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 	 * 
 	 * @return string
 	 */
-	public function getHtmlCustomDesign() {
+	public function getHtmlCustomDesignNameNumber() {
 		$item = $this->getItem();
 		$html = '';
 		$pdpCart = $this->_pdpOptions->getPdpCartItem($item->getItemId());
@@ -82,10 +82,11 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 			$urlTool = $this->_pdpOptions->getUrlToolDesign();
 			$designId = $pdpCart[0]['design_id'];
 			$pdpProductId = $pdpCart[0]['pdp_product_id'];
+			$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
 			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
-				$html = '<strong style="margin-bottom:5px;display:block;">'.__('Customized Design:').'</strong>';
+				$html .= '<strong style="margin-bottom:5px;display:block;">'.__('Customized Design:').'</strong>';
 				$html .= '<ul class="items">';
 				$i=0;
 				foreach($sideThubms as $sideThub) {
@@ -97,6 +98,50 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 				}
 				$html .= '</ul>';
 			}
+		}
+		return $html;
+	}
+	
+	/**
+	 * @param String $value
+	 * @param \Magento\Framework\DataObject|Item $item
+	 * @return String
+	 */
+	protected function getHtmlNameNumber($value, $item) {
+		$_value = unserialize($value);
+		if(isset($_value['multi_size'])) {
+			$html = '<div class="block-name-num">';
+			$html .= '<strong>'.__('Name & Number').': </strong><i id="name-num-'.$item->getItemId().'" data-itemid="'.$item->getItemId().'" 
+			data-mage-init=\'{"PDP_Integration/js/moreinfo":{"template_id":"#name-num'.$item->getItemId().'-template", "title": "'.__('Name & Number').'"}}\'
+			class="more-info-name-num">more info</i>';
+			$html .= '<script id="name-num'.$item->getItemId().'-template" type="x-magento-template">';
+				$html .= '<div class="block-namenum">';
+					$html .='<table class="data-grid data table">';
+						$html .= '<thead>';
+							$html .= '<tr>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Name').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Num').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Size').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Qty').'</th>';
+							$html .= '</tr>';
+							$html .= '<tr>';
+						$html .= '</thead>';
+						$html .= '<tbody>';
+							foreach($_value['multi_size'] as $_item) {
+								$html .= '<tr>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['name'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['num'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['size'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['qty'].'</td>';
+								$html .= '</tr>';
+							}
+						$html .= '</tbody>';
+					$html .= '</table>';
+				$html .= '</div>';
+			$html .= '</script>';
+			$html .="</div>";
+		} else {
+			$html = '';
 		}
 		return $html;
 	}

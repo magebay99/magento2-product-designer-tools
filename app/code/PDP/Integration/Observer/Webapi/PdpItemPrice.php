@@ -50,7 +50,7 @@ class PdpItemPrice implements ObserverInterface {
 		$product = $item->getProduct();
 		$item = ( $item->getParentItem() ? $item->getParentItem() : $item );
 		$infoRequest = $item->getBuyRequest();
-		if($product->getTypeId() == 'pdpro') {
+		if($product->getTypeId() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
 			if(isset($infoRequest['pdp_price']) && $infoRequest['pdp_price']) {
 				$pdpPrice = $infoRequest['pdp_price'];
 				$pdpPrice = $this->_priceHelper->currency($pdpPrice,false,false);

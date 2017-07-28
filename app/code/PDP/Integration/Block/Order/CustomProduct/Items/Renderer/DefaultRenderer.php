@@ -60,9 +60,9 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 		$html = '';
 		$quoteItem = $this->getQuoteItem($item);
 		if($quoteItem->getCustomPrice()) {
-			$itemPrice = $quoteItem->getCustomPrice();
+			$itemPrice = $quoteItem->getCustomPrice()*$quoteItem->getQty();
 		} else {
-			 $itemPrice = $this->_pdpOptions->getConvertedPrice($quoteItem->getPrice(), $item->getStoreId());
+			 $itemPrice = $this->_pdpOptions->getConvertedPrice($quoteItem->getPrice()*$quoteItem->getQty(), $item->getStoreId());
 		}
 		if($itemPrice) {
 			$html = '<span class="box-price">';
@@ -134,6 +134,7 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 				->setImageFile($product->getFile())
 				->resize(self::SIZE_IMAGE_WIDTH)
 				->getUrl();
+			$pdpCart = $this->_pdpOptions->getPdpCartItem($item->getQuoteItemId());
 			$html =  '<div class="product-detail" >';
 				$html .= '<div class="product-image"><img width="'.self::SIZE_IMAGE_WIDTH.'" src="'.$imageUrl.'"/></div>';
 				$html .= '<div class="block-info" style="float:left">
@@ -143,9 +144,56 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 								if($optHtml) {
 									$html .= '<li>'.$optHtml.'</li>';
 								}
+								if(count($pdpCart)) {
+									$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
+								}
 							  $html .= '</ul>
 						  </div>';
 			$html .= '</div>';
+		}
+		return $html;
+	}
+	
+	/**
+	 * @param String $value
+	 * @param \Magento\Framework\DataObject|Item $item
+	 * @return String
+	 */
+	protected function getHtmlNameNumber($value, \Magento\Framework\DataObject $item) {
+		$_value = unserialize($value);
+		if(isset($_value['multi_size'])) {
+			$html = '<div class="block-name-num">';
+			$html .= '<span>'.__('Name & Number').': <i id="name-num-'.$item->getQuoteItemId().'" data-itemid="'.$item->getQuoteItemId().'" 
+			data-mage-init=\'{"PDP_Integration/js/moreinfo":{"template_id":"#name-num'.$item->getQuoteItemId().'-template", "title": "'.__('Name & Number').'"}}\'
+			class="more-info-name-num">more info</i></span>';
+			$html .= '<script id="name-num'.$item->getQuoteItemId().'-template" type="x-magento-template">';
+				$html .= '<div class="block-namenum">';
+					$html .='<table class="data-grid data table">';
+						$html .= '<thead>';
+							$html .= '<tr>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Name').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Num').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Size').'</th>';
+								$html .= '<th class="data-grid-th _col-xs">'.__('Qty').'</th>';
+							$html .= '</tr>';
+							$html .= '<tr>';
+						$html .= '</thead>';
+						$html .= '<tbody>';
+							foreach($_value['multi_size'] as $_item) {
+								$html .= '<tr>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['name'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['num'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['size'].'</td>';
+									$html .= '<td class="data-grid-indicator-cell">'.$_item['qty'].'</td>';
+								$html .= '</tr>';
+							}
+						$html .= '</tbody>';
+					$html .= '</table>';
+				$html .= '</div>';
+			$html .= '</script>';
+			$html .="</div>";
+		} else {
+			$html = '';
 		}
 		return $html;
 	}

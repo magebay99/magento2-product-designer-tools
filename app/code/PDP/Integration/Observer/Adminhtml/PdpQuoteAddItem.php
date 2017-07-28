@@ -52,7 +52,7 @@ class PdpQuoteAddItem implements ObserverInterface{
 		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 		$request = $objectManager->create('Magento\Framework\App\RequestInterface');
 		$params = $request->getParams();
-		if(isset($buyInfor['pdp_options']) && $_product->getTypeId() == 'pdpro') {
+		if(isset($buyInfor['pdp_options']) && $_product->getTypeId() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
 			if(isset($buyInfor['pdp_price']) && $buyInfor['pdp_price']) {
 				$pdpoptPrice = $buyInfor['pdp_price'];
 				$pdpoptPrice = $this->_priceHelper->currency($pdpoptPrice,false,false);

@@ -27,3 +27,6 @@
   white-space:nowrap;
     width:120px;
 }
+.more-info-name-num{
+	cursor: pointer;
+}

@@ -104,7 +104,7 @@ class Cart
 				$itemId = $itemAsArray['item_id'];
                 if ($item = $this->findItemById($itemId, $items)) {
 					$pdpCartItem = $this->getPdpCartItem($itemId);
-					if($pdpCartItem != null && count($pdpCartItem->getData()) && $result['items'][$key]['product_type'] == 'pdpro') {
+					if($pdpCartItem != null && count($pdpCartItem->getData()) && $result['items'][$key]['product_type'] == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
 						//$sku = $result['items'][$key]['product_sku'];
 						$url = $this->_helperPdpOpt->getLinkDesignPdpWithItemId($itemId);
 						$result['items'][$key]['configure_url'] = $url;

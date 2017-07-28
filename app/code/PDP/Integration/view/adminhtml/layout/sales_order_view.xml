@@ -23,5 +23,8 @@
 				</arguments>
 			</block>
 		</referenceBlock>
+		<referenceContainer name="before.body.end">
+			<block class="Magento\Framework\View\Element\Template" name="moreinfo.popup.additional" template="PDP_Integration::default.phtml"/>
+		</referenceContainer>		
 	</body>
 </page>

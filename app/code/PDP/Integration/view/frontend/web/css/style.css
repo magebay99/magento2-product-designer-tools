@@ -36,3 +36,6 @@
 }
 td.col-custom-design ul li.item{display:inline-block; margin:0 5px 5px 0;}
 td.col-custom-design ul li.last{margin-right:0;}
+.more-info-name-num{
+	cursor: pointer;
+}

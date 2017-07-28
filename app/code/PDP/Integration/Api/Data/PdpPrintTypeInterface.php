@@ -11,6 +11,8 @@ interface PdpPrintTypeInterface extends ExtensibleDataInterface {
 	
 	const KEY_PRICE = 'price';
 	
+	const KEY_PRICE_MULTI_SIZE = 'price_multi_size';
+	
     /**
      * Returns the print type title.
      *
@@ -55,5 +57,20 @@ interface PdpPrintTypeInterface extends ExtensibleDataInterface {
      * @return $this
      */
     public function setPrice($price);
+
+	/**
+	 * Returns the price Multi size
+	 *
+	 * @return \PDP\Integration\Api\Data\PriceMultiSizeInterface[]|null
+	 */
+	public function getPriceMultiSize();
+	
+	/**
+	 * Sets the price multi size
+	 *
+	 * @param \PDP\Integration\Api\Data\PriceMultiSizeInterface[] $multiSizePrice
+	 * @return $this
+	 */
+	public function setPriceMultiSize($multiSizePrice);
 	
 }

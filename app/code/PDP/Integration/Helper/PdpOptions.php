@@ -308,6 +308,7 @@ class PdpOptions extends AbstractHelper {
 	 * @return bolean
 	 */
 	protected function checkMultipleSize(array $value) {
+		return false;
 		if(isset($value['qnty_input']) && $value['qnty_input']) {
 			if(isset($value['type']) && $value['type'] == 'checkbox') {
 				return true;

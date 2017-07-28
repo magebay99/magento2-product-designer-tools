@@ -114,7 +114,7 @@ class PdpQuoteManagement implements ObserverInterface {
 		foreach($items as $item) {
 			$quoteItemId = $item->getQuoteItemId();
 			$_product = $item->getProduct();
-			if($quoteItemId && $_product->getTypeId() == 'pdpro') {
+			if($quoteItemId && $_product->getTypeId() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
 				if($item->getRowTotal()) {
 					$pdpOrderTotal += $item->getRowTotal();
 				}

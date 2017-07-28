@@ -14,7 +14,7 @@ class AbstractCart {
 		 \Closure $proceed,
 		\Magento\Quote\Model\Quote\Item $item
 	) {
-		$item->setProductType('pdpro');
+		$item->setProductType(\PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE);
 		$result = $proceed($item);
 		//$renderer = $subject->getItemRenderer('pdpro')->setItem($item);
 		//echo $subject->getItem()->getProduct()->getName(); die;

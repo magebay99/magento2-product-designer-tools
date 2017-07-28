@@ -62,5 +62,24 @@ class PdpPrintType extends AbstractExtensibleObject implements PdpPrintTypeInter
      */
     public function setPrice($price) {
 		return $this->setData(self::KEY_PRICE, $price);
-	}	
+	}
+	
+	/**
+	 * Returns the price Multi size
+	 *
+	 * @return \PDP\Integration\Api\Data\PriceMultiSizeInterface[]|null
+	 */
+	public function getPriceMultiSize() {
+		return $this->_get(self::KEY_PRICE_MULTI_SIZE);
+	}
+	
+	/**
+	 * Sets the price multi size
+	 *
+	 * @param \PDP\Integration\Api\Data\PriceMultiSizeInterface[] $multiSizePrice
+	 * @return $this
+	 */
+	public function setPriceMultiSize($multiSizePrice) {
+		return $this->setData(self::KEY_PRICE_MULTI_SIZE, $multiSizePrice);
+	}
 }

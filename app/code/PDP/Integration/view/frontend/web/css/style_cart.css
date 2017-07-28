@@ -7,3 +7,6 @@
 }
 .product-item-details ul.custom-design li{display:inline-block;margin-right:5px;}
 .product-item-details ul.custom-design li.last{margin-right:0;}
+.more-info-name-num{
+	cursor: pointer;
+}

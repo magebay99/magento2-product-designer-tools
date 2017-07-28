@@ -145,20 +145,51 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					$dataOpt = array();
 					if($pdpItem->getPdpOptions() != null) {
 						$dataOpt['pdp_options'] = $postDataArr['pdp_options'];
+						$pdp_option_data = $dataOpt['pdp_options'];
 					}
 					if($pdpItem->getPdpPrintType() != null) {
 						$dataOpt['pdp_print_type'] = $postDataArr['pdp_print_type'];
-					}
-					if(isset($dataOpt['pdp_options'])) {
-						$pdp_option_data = $dataOpt['pdp_options'];
+						$pdp_print_type = $dataOpt['pdp_print_type'];
+						if(isset($dataOpt['pdp_print_type']['price_multi_size'])) {
+							$__price_multi_size = array();
+							foreach($dataOpt['pdp_print_type']['price_multi_size'] as $_val) {
+								if(isset($_val['size']) && isset($_val['price'])) {
+									if(isset($__price_multi_size[$_val['size']])) {
+										$__price_multi_size[$_val['size']] += $_val['price'];
+									} else {
+										$__price_multi_size[$_val['size']] = $_val['price'];
+									}
+								}
+							}
+							$pdp_print_type['price_multi_size'] = $__price_multi_size;
+						}
 					}
 					
-					if(isset($dataOpt['pdp_print_type'])) {
-						$pdp_print_type = $dataOpt['pdp_print_type'];
-					}
 					if($pdpItem->getProductColor() != null) {
 						$productColor = $postDataArr['product_color'];
 						$dataOpt['product_color'] = $productColor;
+					}
+					if($pdpItem->getMultiSize() != null) {
+						//$dataOpt['multi_size'] = $postDataArr['multi_size'];
+						$multi_size = array();
+						$price_multi_size = array();
+						foreach($postDataArr['multi_size'] as $sz_key => $sz_val) {
+							$multi_size_item = array(
+								'name' => isset($sz_val['name']) ? $sz_val['name'] : '', 
+								'num' => isset($sz_val['num']) ? $sz_val['num'] : '',
+								'qty' => isset($sz_val['qty']) ? $sz_val['qty'] : 1,
+								'size' => isset($sz_val['size']) ? ucfirst($sz_val['size']) : '',
+								'price' => isset($sz_val['price']) ? $sz_val['price'] : 0
+							);
+							if(isset($sz_val['size'])) {
+								$multi_size[$sz_val['size']][] = $multi_size_item;
+								if(!isset($price_multi_size[$sz_val['size']])) {
+									if(isset($sz_val['price']) && $sz_val['price']) {
+										$price_multi_size[$sz_val['size']] = $sz_val['price'];
+									}
+								}
+							}
+						}
 					}
 					$additionalOptions = array();
 					$infoRequest = array();
@@ -192,6 +223,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					} else {
 						$pdpProductId = $pdpItem->getEntityId();
 					}
+					
 					if(isset($dataOpt['product_color']['color_price']) && $dataOpt['product_color']['color_price']) {
 						$color_price = $dataOpt['product_color']['color_price'];
 						if(isset($infoRequest['pdp_price'])) {
@@ -200,29 +232,40 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 							$infoRequest['pdp_price'] = $color_price;
 						}
 					}
+					
 					if(isset($pdp_print_type) && count($pdp_print_type)) {
-						$printType = array('label' => __('Print type'), 'value' => '');
-						if(isset($pdp_print_type['title'])) {
-							$printType['value'] = $pdp_print_type['title'];
-						}
-						if(isset($pdp_print_type['price'])){
-							$printTypePrice = $pdp_print_type['price'];
-						}
-						if(isset($pdp_print_type['value'])) {
-							$printTypeValue = $pdp_print_type['value'];
-						}
-						if($printType['value'] != '') {
-							$additionalOptions[] = $printType;
-						}
-						if(isset($printTypeValue)) {
-							$infoRequest['pdp_print_type'] = $printTypeValue;
-							if(isset($printTypePrice)) {
-								if(isset($infoRequest['pdp_price'])) {
-									$infoRequest['pdp_price'] += $printTypePrice;
-								} else {
-									$infoRequest['pdp_price'] = $printTypePrice;
+						if($pdpItem->getMultiSize() != null) {
+							if(isset($pdp_print_type['price_multi_size'])) {
+								$printType = array('label' => __('Print type'), 'value' => '');
+								if(isset($pdp_print_type['title']) && $pdp_print_type['title']) {
+									$printType['value'] = $pdp_print_type['title'];
+									$additionalOptions[] = $printType;
 								}
 							}
+						} else {
+							$printType = array('label' => __('Print type'), 'value' => '');
+							if(isset($pdp_print_type['title'])) {
+								$printType['value'] = $pdp_print_type['title'];
+							}
+							if(isset($pdp_print_type['price'])){
+								$printTypePrice = $pdp_print_type['price'];
+							}
+							if(isset($pdp_print_type['value'])) {
+								$printTypeValue = $pdp_print_type['value'];
+							}
+							if($printType['value'] != '') {
+								$additionalOptions[] = $printType;
+							}
+							if(isset($printTypeValue)) {
+								$infoRequest['pdp_print_type'] = $printTypeValue;
+								if(isset($printTypePrice)) {
+									if(isset($infoRequest['pdp_price'])) {
+										$infoRequest['pdp_price'] += $printTypePrice;
+									} else {
+										$infoRequest['pdp_price'] = $printTypePrice;
+									}
+								}
+							}							
 						}
 					}
 					if(isset($productColor) && count($productColor)) {
@@ -239,50 +282,86 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					try {
 						if($pdpItem->getItemId()) {
 							$this->cart->removeItem($pdpItem->getItemId());
-							if(isset($_pdpOptSelect) && $_pdpOptSelect['multiSize'] && count($_pdpOptSelect['multiSizeOpt']['values'])) {
-								$multiSizeOpt = $_pdpOptSelect['multiSizeOpt'];
-								foreach($multiSizeOpt['values'] as $_val) {
-									$_product = $this->productFactory->create()->load($infoRequest['product']);
-									$_infoRequest = $infoRequest;
-									$_additionalOptions = $additionalOptions;
-									$_infoRequest['qty'] = $_val['qty'];
-									$_additionalOptions[] = array('label' => __($multiSizeOpt['title']), 'value' => __($_val['title']));
-									$_infoRequest['pdp_options'][$multiSizeOpt['option_id']] = $_val['option_type_id'];
-									$_infoRequest['pdp_price'] += $_val['price'];
-									$_product->addCustomOption('additional_options', serialize($_additionalOptions));
-									$this->cart->addProduct($_product, $_infoRequest);
-								}
-								$this->cart->save();
-								$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
-								foreach($quoteItemsArr as $__quoteItem) {
-									try {
-										if (!$this->cart->getQuote()->getHasError()) {
-											$modelPdpquote = $this->_pdpquoteFactory->create();
-											$itemId = $__quoteItem->getItemId();
-											$dataItem = $modelPdpquote->loadByItemId($itemId);
-											if(!$dataItem->getPdpcartId()) {
-												$data = array(
-													'item_id' => $itemId,
-													'product_id' => $__quoteItem->getProductId(),
-													'pdp_product_id' => $pdpProductId,
-													'sku' => $pdpItem->getSku(),
-													'store_id' => $__quoteItem->getStoreId(),
-													'value' => serialize($dataOpt)
-												);
-												if($pdpItem->getDesignId()) {
-													$data['design_id'] = $pdpItem->getDesignId();
+							if($pdpItem->getMultiSize() != null) {
+								if(count($multi_size)) {
+									foreach($multi_size as $mtize_key => $mtize_val){
+										$_product = $this->productFactory->create()->load($infoRequest['product']);
+										$_infoRequest = $infoRequest;
+										$multi_size_qty = 0;
+										if(count($mtize_val) > 1) {
+											foreach($mtize_val as $mtize_val_val) {
+												if(isset($mtize_val_val['qty'])) {
+													$multi_size_qty = $multi_size_qty + $mtize_val_val['qty'];
+												} else {
+													$multi_size_qty = 1;
 												}
-												if($pdpItem->getDesignUrl()) {
-													$data['url'] = $pdpItem->getDesignUrl();
+											}
+										} else {
+											$multi_size_qty = isset($mtize_val[0]['qty'])?$mtize_val[0]['qty']:1;
+										}
+										$_infoRequest['qty'] = $multi_size_qty;
+										$_infoRequest['size'] = $mtize_key;
+										if(isset($pdp_print_type['price_multi_size']) && count($pdp_print_type['price_multi_size'])) {
+											if(isset($pdp_print_type['price_multi_size'][$mtize_key])) {
+												if(isset($_infoRequest['pdp_price'])) {
+													$_infoRequest['pdp_price'] += $pdp_print_type['price_multi_size'][$mtize_key];
+												} else {
+													$_infoRequest['pdp_price'] = $pdp_print_type['price_multi_size'][$mtize_key];
 												}
-												$modelPdpquote->addData($data);
-												$modelPdpquote->save();
 											}
 										}
-									} catch(\Magento\Framework\Exception\LocalizedException $e) {
-										$reponse->setStatus(false)
-												->setMessage(nl2br($e->getMessage()));
-										return $reponse;
+										if(isset($price_multi_size) && count($price_multi_size)) {
+											if(isset($price_multi_size[$mtize_key])) {
+												if(isset($_infoRequest['pdp_price'])) {
+													$_infoRequest['pdp_price'] += $price_multi_size[$mtize_key];
+												} else {
+													$_infoRequest['pdp_price'] = $price_multi_size[$mtize_key];
+												}
+											}
+										}
+										$_additionalOptions = $additionalOptions;
+										$_additionalOptions[] = array('label' => __('Size'), 'value' => ucfirst($mtize_val[0]['size']));
+										$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+										$this->cart->addProduct($_product, $_infoRequest);
+									}
+									$this->cart->save();
+									$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
+									foreach($quoteItemsArr as $__quoteItem) {
+										try {
+											if (!$this->cart->getQuote()->getHasError()) {
+												$modelPdpquote = $this->_pdpquoteFactory->create();
+												$itemId = $__quoteItem->getItemId();
+												$dataItem = $modelPdpquote->loadByItemId($itemId);
+												if(!$dataItem->getPdpcartId() && $__quoteItem->getProductType() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
+													$__infoRequest = $__quoteItem->getBuyRequest();
+													$_dataOpt = $dataOpt;
+													if(isset($__infoRequest['size'])) {
+														$_val_size = $__infoRequest['size'];
+														$_dataOpt['multi_size'] = isset($multi_size[$_val_size])?$multi_size[$_val_size]:'';
+													}
+													$data = array(
+														'item_id' => $itemId,
+														'product_id' => $__quoteItem->getProductId(),
+														'pdp_product_id' => $pdpProductId,
+														'sku' => $pdpItem->getSku(),
+														'store_id' => $__quoteItem->getStoreId(),
+														'value' => serialize($_dataOpt)
+													);
+													if($pdpItem->getDesignId()) {
+														$data['design_id'] = $pdpItem->getDesignId();
+													}
+													if($pdpItem->getDesignUrl()) {
+														$data['url'] = $pdpItem->getDesignUrl();
+													}
+													$modelPdpquote->addData($data);
+													$modelPdpquote->save();
+												}
+											}
+										} catch(\Magento\Framework\Exception\LocalizedException $e) {
+											$reponse->setStatus(false)
+													->setMessage(nl2br($e->getMessage()));
+											return $reponse;
+										}
 									}
 								}
 							} else {
@@ -324,50 +403,86 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 								}
 							}
 						} else {
-							if(isset($_pdpOptSelect) && $_pdpOptSelect['multiSize'] && count($_pdpOptSelect['multiSizeOpt']['values'])) {
-								$multiSizeOpt = $_pdpOptSelect['multiSizeOpt'];
-								foreach($multiSizeOpt['values'] as $_val) {
-									$_product = $this->productFactory->create()->load($infoRequest['product']);
-									$_infoRequest = $infoRequest;
-									$_additionalOptions = $additionalOptions;
-									$_infoRequest['qty'] = $_val['qty'];
-									$_additionalOptions[] = array('label' => __($multiSizeOpt['title']), 'value' => __($_val['title']));
-									$_infoRequest['pdp_options'][$multiSizeOpt['option_id']] = $_val['option_type_id'];
-									$_infoRequest['pdp_price'] += $_val['price'];
-									$_product->addCustomOption('additional_options', serialize($_additionalOptions));
-									$this->cart->addProduct($_product, $_infoRequest);
-								}
-								$this->cart->save();
-								$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
-								foreach($quoteItemsArr as $__quoteItem) {
-									try {
-										if (!$this->cart->getQuote()->getHasError()) {
-											$modelPdpquote = $this->_pdpquoteFactory->create();
-											$itemId = $__quoteItem->getItemId();
-											$dataItem = $modelPdpquote->loadByItemId($itemId);
-											if(!$dataItem->getPdpcartId()) {
-												$data = array(
-													'item_id' => $itemId,
-													'product_id' => $__quoteItem->getProductId(),
-													'pdp_product_id' => $pdpProductId,
-													'sku' => $pdpItem->getSku(),
-													'store_id' => $__quoteItem->getStoreId(),
-													'value' => serialize($dataOpt)
-												);
-												if($pdpItem->getDesignId()) {
-													$data['design_id'] = $pdpItem->getDesignId();
+							if($pdpItem->getMultiSize() != null) {
+								if(count($multi_size)) {
+									foreach($multi_size as $mtize_key => $mtize_val){
+										$_product = $this->productFactory->create()->load($infoRequest['product']);
+										$_infoRequest = $infoRequest;
+										$multi_size_qty = 0;
+										if(count($mtize_val) > 1) {
+											foreach($mtize_val as $mtize_val_val) {
+												if(isset($mtize_val_val['qty'])) {
+													$multi_size_qty = $multi_size_qty + $mtize_val_val['qty'];
+												} else {
+													$multi_size_qty = 1;
 												}
-												if($pdpItem->getDesignUrl()) {
-													$data['url'] = $pdpItem->getDesignUrl();
+											}
+										} else {
+											$multi_size_qty = isset($mtize_val[0]['qty'])?$mtize_val[0]['qty']:1;
+										}
+										$_infoRequest['qty'] = $multi_size_qty;
+										$_infoRequest['size'] = $mtize_key;
+										if(isset($pdp_print_type['price_multi_size']) && count($pdp_print_type['price_multi_size'])) {
+											if(isset($pdp_print_type['price_multi_size'][$mtize_key])) {
+												if(isset($_infoRequest['pdp_price'])) {
+													$_infoRequest['pdp_price'] += $pdp_print_type['price_multi_size'][$mtize_key];
+												} else {
+													$_infoRequest['pdp_price'] = $pdp_print_type['price_multi_size'][$mtize_key];
 												}
-												$modelPdpquote->addData($data);
-												$modelPdpquote->save();
 											}
 										}
-									} catch(\Magento\Framework\Exception\LocalizedException $e) {
-										$reponse->setStatus(false)
-												->setMessage(nl2br($e->getMessage()));
-										return $reponse;
+										if(isset($price_multi_size) && count($price_multi_size)) {
+											if(isset($price_multi_size[$mtize_key])) {
+												if(isset($_infoRequest['pdp_price'])) {
+													$_infoRequest['pdp_price'] += $price_multi_size[$mtize_key];
+												} else {
+													$_infoRequest['pdp_price'] = $price_multi_size[$mtize_key];
+												}
+											}
+										}
+										$_additionalOptions = $additionalOptions;
+										$_additionalOptions[] = array('label' => __('Size'), 'value' => ucfirst($mtize_val[0]['size']));
+										$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+										$this->cart->addProduct($_product, $_infoRequest);
+									}
+									$this->cart->save();
+									$quoteItemsArr = $this->cart->getQuote()->getAllVisibleItems();
+									foreach($quoteItemsArr as $__quoteItem) {
+										try {
+											if (!$this->cart->getQuote()->getHasError()) {
+												$modelPdpquote = $this->_pdpquoteFactory->create();
+												$itemId = $__quoteItem->getItemId();
+												$dataItem = $modelPdpquote->loadByItemId($itemId);
+												if(!$dataItem->getPdpcartId() && $__quoteItem->getProductType() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
+													$__infoRequest = $__quoteItem->getBuyRequest();
+													$_dataOpt = $dataOpt;
+													if(isset($__infoRequest['size'])) {
+														$_val_size = $__infoRequest['size'];
+														$_dataOpt['multi_size'] = isset($multi_size[$_val_size])?$multi_size[$_val_size]:'';
+													}
+													$data = array(
+														'item_id' => $itemId,
+														'product_id' => $__quoteItem->getProductId(),
+														'pdp_product_id' => $pdpProductId,
+														'sku' => $pdpItem->getSku(),
+														'store_id' => $__quoteItem->getStoreId(),
+														'value' => serialize($_dataOpt)
+													);
+													if($pdpItem->getDesignId()) {
+														$data['design_id'] = $pdpItem->getDesignId();
+													}
+													if($pdpItem->getDesignUrl()) {
+														$data['url'] = $pdpItem->getDesignUrl();
+													}
+													$modelPdpquote->addData($data);
+													$modelPdpquote->save();
+												}
+											}
+										} catch(\Magento\Framework\Exception\LocalizedException $e) {
+											$reponse->setStatus(false)
+													->setMessage(nl2br($e->getMessage()));
+											return $reponse;
+										}
 									}
 								}
 							} else {

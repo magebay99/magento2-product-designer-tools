@@ -42,7 +42,7 @@ class PdpQuoteProductAdd implements ObserverInterface{
 		foreach($items as $item) {
 			$product = $item->getProduct();
 			$buyRequest = isset($params['item'][$item->getId()]) ? $params['item'][$item->getId()] : array();
-			if(isset($buyRequest['pdp_options']) && $product->getTypeId() == 'pdpro') {
+			if(isset($buyRequest['pdp_options']) && $product->getTypeId() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
 				$dataRequest = serialize($buyRequest);
 				$item->addOption(array('code'=> 'info_buyRequest', 'product_id'=> $item->getProductId(), 'value'=> $dataRequest));
 				
