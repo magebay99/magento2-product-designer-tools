@@ -31,6 +31,11 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
 	 */
 	const PDP_CUSTOM_SIZE = 'custom_size';
 	
+	/**
+	 * pdp Multi size
+	 */
+	const PDP_MULTI_SIZE = 'multi_size';
+	
 	/*
      * pdp option.
      */
@@ -170,6 +175,19 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
 	 * @return $this
 	 */
 	public function setCustomSize(\PDP\Integration\Api\Data\CustomSizeInterface $customSize);
+	
+	/**
+	 * Gets the pdp multi size
+	 * @return \PDP\Integration\Api\Data\MultiSizeInterface[]|null
+	 */
+	public function getMultiSize();
+	
+	/**
+	 * Sets the multi size
+	 * @param \PDP\Integration\Api\Data\MultiSizeInterface[] $multiSize
+	 * @return $this
+	 */
+	public function setMultiSize($multiSize);
 
     /**
      * Gets the pdp options.
