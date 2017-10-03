@@ -34,6 +34,10 @@ class PdpProductType extends \Magento\Framework\Model\ResourceModel\Db\AbstractD
         $this->_init('pdp_product_type', 'type_id');
     }
 	
+	public function getTable($tableName) {
+		return 'pdp_product_type';
+	}	
+	
     public function loadBySku($quote, $itemId)
     {
         $connection = $this->getConnection();

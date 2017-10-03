@@ -35,6 +35,10 @@ class Pdpproduct extends AbstractDb
         $this->_init('pdp_product', 'entity_id');
     }
 	
+	public function getTable($tableName) {
+		return 'pdp_product';
+	}	
+	
     /**
      * Process data before saving
      *

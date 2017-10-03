@@ -32,5 +32,9 @@ class PdpDesignJson extends AbstractDb{
     protected function _construct()
     {
         $this->_init('pdp_design_json', 'design_id');
-    }	
+    }
+	
+	public function getTable($tableName) {
+		return 'pdp_design_json';
+	}	
 }
