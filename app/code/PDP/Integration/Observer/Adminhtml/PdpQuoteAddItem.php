@@ -56,9 +56,7 @@ class PdpQuoteAddItem implements ObserverInterface{
 			if(isset($buyInfor['pdp_price']) && $buyInfor['pdp_price']) {
 				$pdpoptPrice = $buyInfor['pdp_price'];
 				$pdpoptPrice = $this->_priceHelper->currency($pdpoptPrice,false,false);
-				$productPrice = $_product->getFinalPrice();
-				$productPrice = $this->_priceHelper->currency($productPrice,false,false);
-				$price = $productPrice + $pdpoptPrice;
+				$price = $pdpoptPrice;
 				$item->setCustomPrice($price);
 				$item->setOriginalCustomPrice($price);
 				$item->getProduct()->setIsSuperMode(true);
