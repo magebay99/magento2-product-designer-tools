@@ -14,9 +14,11 @@ atlassian*
 /app/etc
 /app/i18n/magento
 /app/*.*
-/lab
 /bin
-
+/lab
+/lab/*.*
+/designer
+/designer/*.*
 /dev/shell
 
 /dev/tests/*/framework
