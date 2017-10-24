@@ -65,3 +65,10 @@ atlassian*
 !/composer.json
 !/composer.lock
 !/README.md
+/app/code/PDP/Integration/Observer/loadGuestDesign.php__
+/app/code/PDP/Integration/composer.json
+/app/design/
+/dev
+/php_errorlog
+/phpserver
+/update
