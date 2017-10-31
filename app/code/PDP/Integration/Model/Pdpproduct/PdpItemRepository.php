@@ -225,7 +225,17 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 					if(isset($pdp_option_data)) {
 						$_pdpOptSelect = $this->_pdpOptions->getOptionsSelect($pdp_option_data);
 						$pdpOptSelect = $_pdpOptSelect['options'];
-						$infoRequest = $this->_pdpOptions->getOptInfoRquest($pdpOptSelect);
+						$_info_request = $this->_pdpOptions->getOptInfoRquest($pdpOptSelect);
+						if (isset($_info_request['pdp_options'])) {
+							$infoRequest['pdp_options'] = $_info_request['pdp_options'];
+						}
+						if (isset($_info_request['pdp_price']) && $_info_request['pdp_price']) {
+							if (isset($infoRequest['pdp_price'])) {
+								$infoRequest['pdp_price'] += $_info_request['pdp_price'];
+							} else {
+								$infoRequest['pdp_price'] += $_info_request['pdp_price'];
+							}
+						}
 						$additionalOptions = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
 						$dataOpt['pdp_options'] = $pdpOptSelect;
 					}
