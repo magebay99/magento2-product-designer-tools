@@ -14,6 +14,8 @@ class PdpOptions extends AbstractHelper {
 	
     const PATH_CONFIG_BUTTON_CUSTOM_LABEL = 'pdpintegrat/general/labelbutton';
 	
+	const PATH_CONFIG_USINGPOPUP_DESIGN = 'pdpintegrat/general/usingpopup';
+	
 	/**
      * @var PdpquoteCollectionFactory
      */
@@ -197,6 +199,18 @@ class PdpOptions extends AbstractHelper {
 	public function getLabelCustom() {
         return $this->scopeConfig->getValue(
             self::PATH_CONFIG_BUTTON_CUSTOM_LABEL,
+            ScopeInterface::SCOPE_STORE
+        );
+	}
+	
+	/**
+	* 
+	* Retrieve true if using popup for design
+	* @return boolean
+	*/
+	public function isUsingPopupDesign() {
+        return $this->scopeConfig->getValue(
+            self::PATH_CONFIG_USINGPOPUP_DESIGN,
             ScopeInterface::SCOPE_STORE
         );
 	}

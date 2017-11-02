@@ -10,12 +10,69 @@ $link_edit = $helper->getLinkDesignPdp($_sku);
 <div class="box-tocart">
     <div class="fieldset">
         <div class="actions">
-            <a href="<?php echo $link_edit ?>" style="text-align:center;"
-                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
-                    class="action primary tocart">
-                <span><?php /* @escapeNotVerified */ echo $buttonTitle ?></span>
-            </a>
+            <?php if ($helper->isUsingPopupDesign()) { ?>
+	            <a href="javascript:void(0);" style="text-align:center;"
+	                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
+	                    class="action primary tocart openpopup">
+	                <span><?php /* @escapeNotVerified */ echo $buttonTitle ?></span>
+	            </a>            
+            <?php } else { ?>
+	            <a href="<?php echo $link_edit ?>" style="text-align:center;"
+	                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
+	                    class="action primary tocart">
+	                <span><?php /* @escapeNotVerified */ echo $buttonTitle ?></span>
+	            </a>
+            <?php } ?>
             <?php echo $block->getChildHtml('', true) ?>
         </div>
     </div>
 </div>
+<?php if ($helper->isUsingPopupDesign()) { ?>
+<style type="text/css">
+#pdp_iframe {
+	background: rgba(0, 0, 0, 0) none repeat scroll 0 0; 
+	border: 0px solid transparent;
+	margin: auto; 
+	position: absolute; 
+	top: -100000px;
+	z-index: 100000;
+}
+</style>
+<div id="wrapper_iframe">
+	
+</div>
+<script>
+	require(['jquery', 'Magento_Ui/js/modal/modal'], function($, modal){
+		setTimeout(function() {
+			$('#wrapper_iframe').html("<iframe id=\"pdp_iframe\" data-checkoutcart-url=\" <?php echo $block->getUrl('checkout/cart', ['_secure' => true]);?>\"></iframe>");
+			var isOpen = false;
+			$('a[class*="openpopup"]').on('click', function(evt){
+				if (isOpen) {
+					$('iframe[id=pdp_iframe]').show();
+				} else {
+					$('body').trigger('processStart');
+					$('iframe[id=pdp_iframe]').attr('src', '<?php echo $link_edit ?>&iframe=1');
+					isOpen = true;
+				}
+				
+			});
+			$('iframe[id=pdp_iframe]').load(function() {
+				$('body').trigger('processStop');
+				$(this).css({
+					"width": "100%",
+					"height" : "100%",
+					"left" : "0",
+					"top" : "0",
+					"right" : "0"
+				});
+				$(this).contents().find('body').css({
+					'padding': '10px 3%'
+				}).children('.toppage').css({
+					'left': '3%',
+					'width': '94%'
+				});
+			});			
+		},400);
+	});
+</script>
+<?php } ?>

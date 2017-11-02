@@ -6,6 +6,7 @@
 	        <general>
 	            <enabled>1</enabled>
 	            <labelbutton>CUSTOMIZE IT</labelbutton>
+				<usingpopup>0</usingpopup>
 	        </general>
 		</pdpintegrat>
 	 </default>
