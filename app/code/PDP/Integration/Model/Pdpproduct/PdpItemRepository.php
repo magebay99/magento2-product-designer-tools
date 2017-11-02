@@ -72,6 +72,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 
     /** @var  \Magento\Framework\Webapi\Rest\Response */
     protected $_response;
+	
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
 
     /**
      * CORS Response Helper . Add Headers to Response Object
@@ -96,6 +101,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
      * @param \PDP\Integration\Model\PdpproductFactory             $pdpproductFactory
      * @param \Magento\Catalog\Model\ProductFactory                $productFactory
      * @param \Magento\Framework\Webapi\Rest\Response              $response
+	 * @param \Magento\Framework\Message\ManagerInterface          $messageManager	 
      * @param \PDP\Integration\Helper\CorsResponseHelper           $corsResponseHelper
      */
     public function __construct(
@@ -111,6 +117,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
         PdpproductFactory $pdpproductFactory,
 		\Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Framework\Webapi\Rest\Response $response,
+		\Magento\Framework\Message\ManagerInterface $messageManager,
         CorsResponseHelper $corsResponseHelper
     ) {
         $this->objectFactory = $objectFactory;
@@ -125,6 +132,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
         $this->_pdpproductFactory = $pdpproductFactory;
 		$this->productFactory = $productFactory;
 		$this->_response = $response;
+		$this->messageManager = $messageManager;
 		$this->_corsResponseHelper = $corsResponseHelper;
     }
 	
@@ -372,6 +380,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												$itemId = $__quoteItem->getItemId();
 												$dataItem = $modelPdpquote->loadByItemId($itemId);
 												if(!$dataItem->getPdpcartId() && $__quoteItem->getProductType() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
+								                    $message = __(
+								                        'You added %1 to your shopping cart.',
+								                        $product->getName()
+								                    );
+								                    $this->messageManager->addSuccessMessage($message);
 													$__infoRequest = $__quoteItem->getBuyRequest();
 													$_dataOpt = $dataOpt;
 													if ($usedNameNum) {
@@ -411,6 +424,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 								$this->cart->save();
 								try {
 									if (!$this->cart->getQuote()->getHasError()) {
+										$message = __(
+											'You added %1 to your shopping cart.',
+											$product->getName()
+										);
+										$this->messageManager->addSuccessMessage($message);
 										$modelPdpquote = $this->_pdpquoteFactory->create();
 										$itembypro = $this->cart->getQuote()->getItemByProduct($product);
 										if($itembypro != false) {
@@ -495,6 +513,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												$itemId = $__quoteItem->getItemId();
 												$dataItem = $modelPdpquote->loadByItemId($itemId);
 												if(!$dataItem->getPdpcartId() && $__quoteItem->getProductType() == \PDP\Integration\Model\Product\Type\Pdpro::TYPE_CODE) {
+								                    $message = __(
+								                        'You added %1 to your shopping cart.',
+								                        $product->getName()
+								                    );
+								                    $this->messageManager->addSuccessMessage($message);
 													$__infoRequest = $__quoteItem->getBuyRequest();
 													$_dataOpt = $dataOpt;
 													if ($usedNameNum) {
@@ -534,6 +557,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 								$this->cart->save();
 								try {
 									if (!$this->cart->getQuote()->getHasError()) {
+										$message = __(
+											'You added %1 to your shopping cart.',
+											$product->getName()
+										);
+										$this->messageManager->addSuccessMessage($message);
 										$modelPdpquote = $this->_pdpquoteFactory->create();
 										$itembypro = $this->cart->getQuote()->getItemByProduct($product);
 										if($itembypro != false) {
