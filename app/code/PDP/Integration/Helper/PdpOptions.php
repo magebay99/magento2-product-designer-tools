@@ -16,6 +16,8 @@ class PdpOptions extends AbstractHelper {
 	
 	const PATH_CONFIG_USINGPOPUP_DESIGN = 'pdpintegrat/general/usingpopup';
 	
+	const PATH_CONFIG_INLINE_CLASS_DESIGN = 'pdpintegrat/general/inline_class';
+	
 	/**
      * @var PdpquoteCollectionFactory
      */
@@ -206,11 +208,23 @@ class PdpOptions extends AbstractHelper {
 	/**
 	* 
 	* Retrieve true if using popup for design
-	* @return boolean
+	* @return int
 	*/
-	public function isUsingPopupDesign() {
+	public function getTypeShowProductDesign() {
         return $this->scopeConfig->getValue(
             self::PATH_CONFIG_USINGPOPUP_DESIGN,
+            ScopeInterface::SCOPE_STORE
+        );
+	}
+	
+	/**
+	* 
+	* Retrieve class custom for type inline
+	* @return boolean
+	*/	
+	public function getClassCustomInline() {
+        return $this->scopeConfig->getValue(
+            self::PATH_CONFIG_INLINE_CLASS_DESIGN,
             ScopeInterface::SCOPE_STORE
         );
 	}

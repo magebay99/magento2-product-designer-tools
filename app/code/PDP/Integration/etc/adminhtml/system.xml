@@ -23,9 +23,15 @@
 					<label>Label Button Custom</label>
 				</field>
 				<field id="usingpopup" translate="label" type="select" sortOrder="40" showInDefault="1" ahowInWebsite="1" showInStore="1">
-					<label>Using Popup for Design</label>
-					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-				</field>				
+					<label>Show on product page</label>
+					<source_model>PDP\Integration\Model\Config\Source\Attrpopup</source_model>
+				</field>
+				<field id="inline_class" translate="label comment" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Add class custom for type show on product page inline</label>
+                    <depends>
+                        <field id="usingpopup">2</field>
+                    </depends>					
+				</field>
 			</group>
 		</section>
     </system>

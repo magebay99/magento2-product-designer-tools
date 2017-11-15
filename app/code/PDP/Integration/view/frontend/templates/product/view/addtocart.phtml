@@ -5,12 +5,13 @@ $helper = $this->helper('PDP\Integration\Helper\PdpOptions');
 $_product = $block->getProduct();
 $_sku = $_product->getSku();
 $link_edit = $helper->getLinkDesignPdp($_sku);
+$type_show_product = $helper->getTypeShowProductDesign();
 ?>
 <?php $buttonTitle = __($helper->getLabelCustom()); ?>
 <div class="box-tocart">
     <div class="fieldset">
         <div class="actions">
-            <?php if ($helper->isUsingPopupDesign()) { ?>
+            <?php if ($type_show_product) { ?>
 	            <a href="javascript:void(0);" style="text-align:center;"
 	                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
 	                    class="action primary tocart openpopup">
@@ -27,40 +28,46 @@ $link_edit = $helper->getLinkDesignPdp($_sku);
         </div>
     </div>
 </div>
-<?php if ($helper->isUsingPopupDesign()) { ?>
+<?php if ($type_show_product) { ?>
 <style type="text/css">
 #pdp_iframe {
-    background: rgba(0,0,0,0.5);
-    border: 0px solid transparent;
-    margin: auto;
-    position: fixed;
-    top: -100000px;
-    padding: 5% 5% 1% 5%;
-    z-index: 100000;
+	background: rgba(0, 0, 0, 0) none repeat scroll 0 0; 
+	border: 0px solid transparent;
+	margin: auto; 
+	position: absolute; 
+	top: -100000px;
+	z-index: 100000;
 }
 </style>
-<div id="wrapper_iframe">
-	
-</div>
+
 <script>
 	require(['jquery', 'Magento_Ui/js/modal/modal'], function($, modal){
+		var iframehtml, custom_class = 'use-iframe ';
+		<?php if($type_show_product == 2) { 
+			$class_custom_inline = $helper->getClassCustomInline();
+		?>
+			custom_class += '<?php echo $class_custom_inline ?>';
+			iframehtml = '<div id="wrapper_iframe" class="iframe_design <?php echo $class_custom_inline ?>"></div>';
+		<?php } elseif ($type_show_product == 1){ ?>
+			iframehtml = '<div id="wrapper_iframe"></div>';
+		<?php } ?>		
 		setTimeout(function() {
+			$('[id=maincontent]').after(iframehtml);
 			$('#wrapper_iframe').html("<iframe id=\"pdp_iframe\" data-checkoutcart-url=\" <?php echo $block->getUrl('checkout/cart', ['_secure' => true]);?>\"></iframe>");
 			var isOpen = false;
 			$('a[class*="openpopup"]').on('click', function(evt){
-				$('body').css({
-					"overflow": "hidden"
-				});
+				<?php if($type_show_product == 2) { ?>
+					$('[id=maincontent]').hide();
+				<?php } ?>
 				if (isOpen) {
 					$('iframe[id=pdp_iframe]').show();
 				} else {
 					$('body').trigger('processStart');
-					$('iframe[id=pdp_iframe]').attr('src', '<?php echo $link_edit ?>&iframe=1');
+					$('iframe[id=pdp_iframe]').attr('src', '<?php echo $link_edit ?>&iframe=<?php echo $type_show_product ?>');
 					isOpen = true;
 				}
 				
 			});
-
 			$('iframe[id=pdp_iframe]').load(function() {
 				$('body').trigger('processStop');
 				$(this).css({
@@ -70,12 +77,12 @@ $link_edit = $helper->getLinkDesignPdp($_sku);
 					"top" : "0",
 					"right" : "0"
 				});
-				// $(this).contents().find('body').css({
-				// 	'padding': '10px 3%'
-				// }).children('.toppage').css({
-				// 	'left': '3%',
-				// 	'width': '94%'
-				// });
+				$(this).contents().find('body').addClass(custom_class).css({
+					'padding': '10px 3%'
+				}).children('.toppage').css({
+					'left': '3%',
+					'width': '94%'
+				});
 			});			
 		},400);
 	});
