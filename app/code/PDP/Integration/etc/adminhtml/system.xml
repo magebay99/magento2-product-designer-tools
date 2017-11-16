@@ -13,21 +13,21 @@
 			<group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>PDP Integration setting</label>
 				<field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Enabled Api Add Cart</label>
+					<label>Enabled PDP</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
 				<field id="pathpdp" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Url P+</label>
+					<label>URL path installed PDP</label>
 				</field>
 				<field id="labelbutton" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Label Button Custom</label>
+					<label>Design button label</label>
 				</field>
 				<field id="usingpopup" translate="label" type="select" sortOrder="40" showInDefault="1" ahowInWebsite="1" showInStore="1">
-					<label>Show on product page</label>
+					<label>Show PDP on product page</label>
 					<source_model>PDP\Integration\Model\Config\Source\Attrpopup</source_model>
 				</field>
 				<field id="inline_class" translate="label comment" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Add class custom for type show on product page inline</label>
+					<label>Enter parent class name to append PDP</label>
                     <depends>
                         <field id="usingpopup">2</field>
                     </depends>					
