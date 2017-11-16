@@ -39,6 +39,15 @@ $type_show_product = $helper->getTypeShowProductDesign();
     padding: 5% 5% 1% 5%;
     z-index: 100000;
 }
+#pdp_iframe_inline {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #eee;
+    margin: auto;
+    position: relative;
+    top: -100000px;
+    padding: 0;
+    z-index: 100000;
+}
 </style>
 
 <script>
@@ -46,34 +55,38 @@ $type_show_product = $helper->getTypeShowProductDesign();
 		var iframehtml, custom_class = 'use-iframe ';
 		<?php if($type_show_product == 2) { 
 			$class_custom_inline = $helper->getClassCustomInline();
+			$id_iframe = 'pdp_iframe_inline';
+			$iframe_height ='650px';
 		?>
 			custom_class += '<?php echo $class_custom_inline ?>';
 			iframehtml = '<div id="wrapper_iframe" class="iframe_design <?php echo $class_custom_inline ?>"></div>';
 		<?php } elseif ($type_show_product == 1){ ?>
 			iframehtml = '<div id="wrapper_iframe"></div>';
+			$id_iframe = 'pdp_iframe';
+			$iframe_height ='100%';
 		<?php } ?>		
 		setTimeout(function() {
 			$('[id=maincontent]').after(iframehtml);
-			$('#wrapper_iframe').html("<iframe id=\"pdp_iframe\" data-checkoutcart-url=\" <?php echo $block->getUrl('checkout/cart', ['_secure' => true]);?>\"></iframe>");
+			$('#wrapper_iframe').html("<iframe id=\"<?php echo $id_iframe;?>\" data-checkoutcart-url=\" <?php echo $block->getUrl('checkout/cart', ['_secure' => true]);?>\"></iframe>");
 			var isOpen = false;
 			$('a[class*="openpopup"]').on('click', function(evt){
 				<?php if($type_show_product == 2) { ?>
 					$('[id=maincontent]').hide();
 				<?php } ?>
 				if (isOpen) {
-					$('iframe[id=pdp_iframe]').show();
+					$('iframe[id=<?php echo $id_iframe;?>]').show();
 				} else {
-					$('body').trigger('processStart');
-					$('iframe[id=pdp_iframe]').attr('src', '<?php echo $link_edit ?>&iframe=<?php echo $type_show_product ?>');
+					$('#maincontent').trigger('processStart');
+					$('iframe[id=<?php echo $id_iframe;?>]').attr('src', '<?php echo $link_edit ?>&iframe=<?php echo $type_show_product ?>');
 					isOpen = true;
 				}
 				
 			});
-			$('iframe[id=pdp_iframe]').load(function() {
-				$('body').trigger('processStop');
+			$('iframe[id=<?php echo $id_iframe;?>]').load(function() {
+				$('#maincontent').trigger('processStop');
 				$(this).css({
 					"width": "100%",
-					"height" : "100%",
+					"height" : "<?php echo $iframe_height;?>",
 					"left" : "0",
 					"top" : "0",
 					"right" : "0"
