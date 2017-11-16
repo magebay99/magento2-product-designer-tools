@@ -31,12 +31,13 @@ $type_show_product = $helper->getTypeShowProductDesign();
 <?php if ($type_show_product) { ?>
 <style type="text/css">
 #pdp_iframe {
-	background: rgba(0, 0, 0, 0) none repeat scroll 0 0; 
-	border: 0px solid transparent;
-	margin: auto; 
-	position: absolute; 
-	top: -100000px;
-	z-index: 100000;
+    background: rgba(0,0,0,0.5);
+    border: 0px solid transparent;
+    margin: auto;
+    position: fixed;
+    top: -100000px;
+    padding: 5% 5% 1% 5%;
+    z-index: 100000;
 }
 </style>
 
@@ -77,12 +78,12 @@ $type_show_product = $helper->getTypeShowProductDesign();
 					"top" : "0",
 					"right" : "0"
 				});
-				$(this).contents().find('body').addClass(custom_class).css({
-					'padding': '10px 3%'
-				}).children('.toppage').css({
-					'left': '3%',
-					'width': '94%'
-				});
+				//$(this).contents().find('body').addClass(custom_class).css({
+				//	'padding': '10px 3%'
+				//}).children('.toppage').css({
+				//	'left': '3%',
+				//	'width': '94%'
+				//});
 			});			
 		},400);
 	});
