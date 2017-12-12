@@ -150,23 +150,12 @@ class PdpOptions extends AbstractHelper {
 	public function getLinkDesignPdp($sku) {
 		$url = '#';
 		if($this->statusPdpIntegration()) {
-			$pos = strpos($sku,'PDP');
 			$proId = '';
-			if( $pos === false ) {
-				$pdpProdu = $this->_objectmanager->get('PDP\Integration\Model\PdpProductType')->getProductWithSku($sku);
-				foreach($pdpProdu as $key => $value) {
-					if(isset($value['type_id'])) {
-						$proId = $value['type_id'];
-					}
+			$pdpProdu = $this->_objectmanager->get('PDP\Integration\Model\PdpProductType')->getProductWithSku($sku);
+			foreach($pdpProdu as $key => $value) {
+				if(isset($value['type_id'])) {
+					$proId = $value['type_id'];
 				}
-			} else {
-				$_sku = explode('PDP-',$sku);
-				$pdpProdu = $this->_objectmanager->get('PDP\Integration\Model\PdpProductType')->getProductWithSku($_sku[1]);
-				foreach($pdpProdu as $key => $value) {
-					if(isset($value['type_id'])) {
-						$proId = $value['type_id'];
-					}
-				}				
 			}
 			if($proId) {
 				$url = $this->getUrlToolDesign().'/?pid='.$proId;
