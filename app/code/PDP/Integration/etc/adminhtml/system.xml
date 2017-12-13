@@ -22,7 +22,7 @@
 				<field id="labelbutton" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Design button label</label>
 				</field>
-				<field id="usingpopup" translate="label" type="select" sortOrder="40" showInDefault="1" ahowInWebsite="1" showInStore="1">
+				<field id="usingpopup" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Show PDP on product page</label>
 					<source_model>PDP\Integration\Model\Config\Source\Attrpopup</source_model>
 				</field>
