@@ -2,6 +2,7 @@
 namespace PDP\Integration\Block\Cart\Item;
 
 use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Message\InterpretationStrategyInterface;
 
 class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
@@ -19,7 +20,12 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
     /**
 	 * @param \PDP\Integration\Helper\PdpOptions
 	 */
-	protected $_pdpOptions;		
+	protected $_pdpOptions;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 	
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -33,6 +39,7 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
      * @param InterpretationStrategyInterface $messageInterpretationStrategy
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
+	 * @param Json $serializer
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      * @codeCoverageIgnore
@@ -49,9 +56,11 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
         InterpretationStrategyInterface $messageInterpretationStrategy,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
 		\PDP\Integration\Helper\PdpOptions $pdpOptions,
+		Json $serializer = null,
         array $data = []
     ) {
         $this->_objectManager = $objectManager;
+		$this->serializer = $serializer ?: $this->_objectManager->get(Json::class);
         $this->_pdpOptions = $pdpOptions;
         parent::__construct($context, $productConfig, $checkoutSession, $imageBuilder, $urlHelper, $messageManager, $priceCurrency, $moduleManager, $messageInterpretationStrategy, $data);
     }	
@@ -108,7 +117,7 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 	 * @return String
 	 */
 	protected function getHtmlNameNumber($value, $item) {
-		$_value = unserialize($value);
+		$_value = $this->serializer->unserialize($value);
 		if(isset($_value['multi_size'])) {
 			$html = '<div class="block-name-num">';
 			$html .= '<strong>'.__('Name & Number').': </strong><i id="name-num-'.$item->getItemId().'" data-itemid="'.$item->getItemId().'" 

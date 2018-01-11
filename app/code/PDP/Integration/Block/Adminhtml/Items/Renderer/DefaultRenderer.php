@@ -1,6 +1,8 @@
 <?php
 namespace PDP\Integration\Block\Adminhtml\Items\Renderer;
 
+use Magento\Framework\Serialize\Serializer\Json;
+
 class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer {
 	
 	/**
@@ -14,12 +16,18 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
 	protected $_pdpOptions;
 	
     /**
+     * @var Json
+     */
+    private $serializer;	
+	
+    /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
+	 * @param Json $serializer
      * @param array $data
      */
     public function __construct(
@@ -29,10 +37,12 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
         \Magento\Framework\Registry $registry,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
 		\PDP\Integration\Helper\PdpOptions $pdpOptions,
+		Json $serializer = null,
         array $data = []
     ) {
         $this->_objectManager = $objectManager;
         $this->_pdpOptions = $pdpOptions;
+		$this->serializer = $serializer ?: $this->_objectManager->get(Json::class);
         parent::__construct($context, $stockRegistry, $stockConfiguration, $registry, $data);
     }
 	
@@ -72,7 +82,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
 	 * @return String
 	 */
 	protected function getHtmlNameNumber($value, \Magento\Framework\DataObject $item) {
-		$_value = unserialize($value);
+		$_value = $this->serializer->unserialize($value);
 		if(isset($_value['multi_size'])) {
 			$html = '<div class="block-name-num">';
 			$html .= '<span>'.__('Name & Number').': <i id="name-num-'.$item->getQuoteItemId().'" data-itemid="'.$item->getQuoteItemId().'" 

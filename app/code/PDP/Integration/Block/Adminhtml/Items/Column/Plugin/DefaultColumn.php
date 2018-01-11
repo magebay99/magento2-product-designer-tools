@@ -1,6 +1,8 @@
 <?php
-
 namespace PDP\Integration\Block\Adminhtml\Items\Column\Plugin;
+
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class DefaultColumn {
     /**
@@ -14,21 +16,29 @@ class DefaultColumn {
     protected $jsonHelper;	
 
 	/** @var \Magento\Store\Model\StoreManagerInterface */
-    private $storeManager;			
+    private $storeManager;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 	
     /**
      * @param \PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory
 	 * @param \Magento\Framework\Json\Helper\Data $jsonHelper
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+	 * @param Json $serializer
 	 */	
 	public function __construct(
 		\PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory,
 		\Magento\Framework\Json\Helper\Data $jsonHelper,
-		\Magento\Store\Model\StoreManagerInterface $storeManager
+		\Magento\Store\Model\StoreManagerInterface $storeManager,
+		Json $serializer = null
 	) {
 		$this->pdpquoteCollectionFactory = $pdpquoteCollectionFactory;
 		$this->jsonHelper = $jsonHelper;
 		$this->storeManager = $storeManager;
+		$this->serializer = $serializer ?: ObjectManager::getInstance()->get(Json::class);
 	}
 
     /**
@@ -46,7 +56,7 @@ class DefaultColumn {
 			$pdpItemArr = $pdpItems->getData();
 			if(count($pdpItemArr)) {				
 				foreach($pdpItemArr as $pdpItem) {
-					$valueObj = unserialize($pdpItem['value']);
+					$valueObj = $this->serializer->unserialize($pdpItem['value']);
 					if(count($valueObj)) {
 						foreach($valueObj as $vlItem) {
 							$_result[] = array(

@@ -2,6 +2,8 @@
 namespace PDP\Integration\Block\Order\CustomProduct\Items\Renderer;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 
@@ -23,23 +25,31 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
     /**
 	 * @param \Magento\Quote\Model\Quote\Item
 	 */
-	protected $_quoteItem;		
+	protected $_quoteItem;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 	
 	/**
      * @param \PDP\Integration\Block\Context $context
      * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
      * @param ProductRepositoryInterfaceFactory $productRepositoryFactory
+	 * @param Json $serializer
      * @param array $data
      */
     public function __construct(
         \PDP\Integration\Block\Context $context,
 		\PDP\Integration\Helper\PdpOptions $pdpOptions,
 		ProductRepositoryInterfaceFactory $productRepositoryFactory,
+		Json $serializer = null,
         array $data = []
     ) {
         parent::__construct($context, $data);
 		$this->_pdpOptions = $pdpOptions;
 		$this->_productRepositoryFactory = $productRepositoryFactory;
+		$this->serializer = $serializer ?: ObjectManager::getInstance()->get(Json::class);
     }
 	
 	/**
@@ -160,7 +170,7 @@ class DefaultRenderer extends \PDP\Integration\Block\AbstractPdpAcc{
 	 * @return String
 	 */
 	protected function getHtmlNameNumber($value, \Magento\Framework\DataObject $item) {
-		$_value = unserialize($value);
+		$_value = $this->serializer->unserialize($value);
 		if(isset($_value['multi_size'])) {
 			$html = '<div class="block-name-num">';
 			$html .= '<span>'.__('Name & Number').': <i id="name-num-'.$item->getQuoteItemId().'" data-itemid="'.$item->getQuoteItemId().'" 

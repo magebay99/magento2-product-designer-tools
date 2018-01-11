@@ -2,6 +2,8 @@
 
 namespace PDP\Integration\Plugin\Cart\Item;
 
+use Magento\Framework\Serialize\Serializer\Json;
+
 class Renderer {
 
     /** @var \Magento\Store\Model\StoreManagerInterface */
@@ -11,18 +13,26 @@ class Renderer {
     * @var PdpquoteCollectionFactory
     */
     protected $pdpquoteCollectionFactory;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;		
 
     /**
 	* @param \Magento\Store\Model\StoreManagerInterface $storeManager
     * @param \PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory
+	* @param Json $serializer
     * 
     */
     public function __construct(
 		\Magento\Store\Model\StoreManagerInterface $storeManager,
-        \PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory
+        \PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory,
+		Json $serializer = null
     ) {
         $this->storeManager = $storeManager;
 		$this->pdpquoteCollectionFactory = $pdpquoteCollectionFactory;
+		$this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(Json::class);
     }	
 	/**
 	* 
@@ -40,7 +50,7 @@ class Renderer {
 				$pdpCartItemsArr = $pdpCartItems->getData();
 				if(count($pdpCartItemsArr)) {
 					foreach($pdpCartItemsArr as $pdpItem) {
-						$valueObj = unserialize($pdpItem['value']);
+						$valueObj = $this->serializer->unserialize($pdpItem['value']);
 						if(count($valueObj)) {
 							foreach($valueObj as $vlItem) {
 								$result[] = array(

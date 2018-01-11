@@ -2,6 +2,7 @@
 namespace PDP\Integration\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use PDP\Integration\Helper\PdpOptions;
 
 class PdpQuoteManagement implements ObserverInterface {
@@ -57,7 +58,12 @@ class PdpQuoteManagement implements ObserverInterface {
     /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
-    protected $messageManager;	
+    protected $messageManager;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 	
     /**
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -71,6 +77,7 @@ class PdpQuoteManagement implements ObserverInterface {
 	 * @param \PDP\Integration\Model\Session $pdpIntegrationSession
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 * @param \Magento\Framework\Message\ManagerInterface $messageManager
+	 * @param Json $serializer
      */
     public function __construct(
 		\Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -83,7 +90,8 @@ class PdpQuoteManagement implements ObserverInterface {
 		\PDP\Integration\Model\PdpGuestDesignFactory $pdpGuestDesignFactory,
 		\PDP\Integration\Model\Session $pdpIntegrationSession,
 		\Magento\Customer\Model\Session $customerSession,
-		\Magento\Framework\Message\ManagerInterface $messageManager
+		\Magento\Framework\Message\ManagerInterface $messageManager,
+		Json $serializer = null
     ) {
         $this->storeManager = $storeManager;
         $this->_pdpOrderFactory = $pdpOrderFactory;
@@ -96,6 +104,7 @@ class PdpQuoteManagement implements ObserverInterface {
 		$this->_pdpIntegrationSession = $pdpIntegrationSession;
 		$this->_customerSession = $customerSession;
 		$this->messageManager = $messageManager;
+		$this->serializer = $serializer ?: $this->_objectManager->get(Json::class);
     }
 	
     /**
@@ -124,7 +133,7 @@ class PdpQuoteManagement implements ObserverInterface {
 					$pdpItemArr = $_pdpItemArr[0];
 					$saveOrderInfoPdp = true;
 					$requestOptions = $item->getProductOptionByCode('info_buyRequest');
-					$pdpValue = unserialize($pdpItemArr['value']);
+					$pdpValue = $this->serializer->unserialize($pdpItemArr['value']);
 					if(isset($pdpValue['pdp_options'])) {
 						$pdpOptions = $pdpValue['pdp_options'];
 					}

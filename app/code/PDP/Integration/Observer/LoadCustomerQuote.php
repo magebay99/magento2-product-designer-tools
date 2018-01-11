@@ -2,6 +2,7 @@
 namespace PDP\Integration\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class LoadCustomerQuote implements ObserverInterface {
 	
@@ -31,18 +32,26 @@ class LoadCustomerQuote implements ObserverInterface {
     private $pdpquoteFactory;
 	
     /**
+     * @var Json
+     */
+    private $serializer;	
+	
+    /**
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
+	 * @param Json $serializer
      * @codeCoverageIgnore
      */
     public function __construct(
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-		\Magento\Framework\Registry $registry
+		\Magento\Framework\Registry $registry,
+		Json $serializer = null
     ) {
         $this->_customerSession = $customerSession;
         $this->messageManager = $messageManager;
 		$this->registry = $registry;
+		$this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(Json::class);
     }
 	
     /**
@@ -74,7 +83,7 @@ class LoadCustomerQuote implements ObserverInterface {
 						'design_id' => $dataItem->getDesignId(),
 						'url' => $dataItem->getUrl(),
 						'sku' => $dataItem->getSku(),
-						'value' => unserialize($dataItem->getValue())
+						'value' => $this->serializer->unserialize($dataItem->getValue())
 					);
 					array_push($dataItems, $dataItem);
 				}

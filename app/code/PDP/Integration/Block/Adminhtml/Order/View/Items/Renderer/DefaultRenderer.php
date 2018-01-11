@@ -2,6 +2,7 @@
 namespace PDP\Integration\Block\Adminhtml\Order\View\Items\Renderer;
 
 use Magento\Sales\Model\Order\Item;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer
 {
@@ -16,6 +17,11 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 	 */
 	protected $_pdpOptions;	
 	
+    /**
+     * @var Json
+     */
+    private $serializer;	
+	
 	/**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
@@ -25,6 +31,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
      * @param \Magento\Checkout\Helper\Data $checkoutHelper
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \PDP\Integration\Helper\PdpOptions $pdpOptions
+	 * @param Json $serializer
      * @param array $data
      */
     public function __construct(
@@ -36,10 +43,12 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
         \Magento\Checkout\Helper\Data $checkoutHelper,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
 		\PDP\Integration\Helper\PdpOptions $pdpOptions,
+		Json $serializer = null,
         array $data = []
     ) {
         $this->_objectManager = $objectManager;
         $this->_pdpOptions = $pdpOptions;
+		$this->serializer = $serializer ?: $this->_objectManager->get(Json::class);
         parent::__construct($context, $stockRegistry, $stockConfiguration, $registry, $messageHelper, $checkoutHelper, $data);
     }
 	
@@ -81,7 +90,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 	 * @return String
 	 */
 	protected function getHtmlNameNumber($value, \Magento\Framework\DataObject $item) {
-		$_value = unserialize($value);
+		$_value = $this->serializer->unserialize($value);
 		if(isset($_value['multi_size'])) {
 			$html = '<div class="block-name-num">';
 			$html .= '<span>'.__('Name & Number').': <i id="name-num-'.$item->getQuoteItemId().'" data-itemid="'.$item->getQuoteItemId().'" 

@@ -1,6 +1,7 @@
 <?php
-
 namespace PDP\Integration\Plugin\Checkout\Model;
+
+use Magento\Framework\Serialize\Serializer\Json;
 
 class DefaultConfigProvider {
 	
@@ -15,21 +16,29 @@ class DefaultConfigProvider {
     protected $jsonHelper;
     
 	/** @var \Magento\Store\Model\StoreManagerInterface */
-    private $storeManager;		
+    private $storeManager;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 	
     /**
      * @param \PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory
 	 * @param \Magento\Framework\Json\Helper\Data $jsonHelper
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+	 * @param Json $serializer
 	 */	
 	public function __construct(
 		\PDP\Integration\Model\ResourceModel\Pdpquote\CollectionFactory $pdpquoteCollectionFactory,
 		\Magento\Framework\Json\Helper\Data $jsonHelper,
-		\Magento\Store\Model\StoreManagerInterface $storeManager
+		\Magento\Store\Model\StoreManagerInterface $storeManager,
+		Json $serializer = null
 	) {
 		$this->pdpquoteCollectionFactory = $pdpquoteCollectionFactory;
 		$this->jsonHelper = $jsonHelper;
 		$this->storeManager = $storeManager;
+		$this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(Json::class);
 	}
 	
     /**
@@ -55,7 +64,7 @@ class DefaultConfigProvider {
 					$dataItemArr = $dataItem->getData();
 					if(count($dataItemArr)) {
 						foreach($dataItemArr as $totalItem) {
-							$_value = unserialize($totalItem['value']);
+							$_value = $this->serializer->unserialize($totalItem['value']);
 							$totalsDataItems[$_key]['pdpoptions'] = $this->jsonHelper->jsonEncode($_value);
 						}
 					}
@@ -70,7 +79,7 @@ class DefaultConfigProvider {
 					$pdpcartItemArr = $pdpcartItems->getData();
 					if(count($pdpcartItemArr)) {
 						foreach($pdpcartItemArr as $pdpItem) {
-							$valueObj = unserialize($pdpItem['value']);
+							$valueObj = $this->serializer->unserialize($pdpItem['value']);
 							$quoteItemData[$key]['pdpoptions'] = $valueObj;
 						}
 					}

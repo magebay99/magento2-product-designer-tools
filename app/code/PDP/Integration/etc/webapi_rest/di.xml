@@ -4,4 +4,17 @@
 	<type name="Magento\Catalog\Helper\Product\Configuration">
 		<plugin name="pdp_catalog_helper_product_configuration" type="PDP\Integration\Plugin\ProductConfiguration" sortOrder="50" />
 	</type>
+	<type name="Magento\Authorization\Model\CompositeUserContext">
+        <plugin name="pdp_compositeusercontext" type="PDP\Integration\Plugin\CompositeUserContext" sortOrder="40" />
+    </type>	
+	<!--type name="Magento\Authorization\Model\CompositeUserContext">
+        <arguments>
+            <argument name="userContexts" xsi:type="array">
+                <item name="customerSessionUserContext" xsi:type="array">
+                    <item name="type" xsi:type="object">Magento\Customer\Model\Authorization\CustomerSessionUserContext</item>
+                    <item name="sortOrder" xsi:type="string">100</item>
+                </item>
+            </argument>
+        </arguments>
+    </type-->
 </config>

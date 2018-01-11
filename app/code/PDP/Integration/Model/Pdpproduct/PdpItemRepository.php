@@ -10,6 +10,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Checkout\Model\Cart as CustomerCart;
 use PDP\Integration\Plugin\CorsHeadersPlugin;
+use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\App\ObjectManager;
 
 class PdpItemRepository implements PdpItemRepositoryInterface {
 
@@ -84,6 +86,11 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
      * @var \PDP\Integration\Helper\CorsResponseHelper
      */
     private $_corsResponseHelper;
+	
+    /**
+     * @var Json
+     */
+    private $serializer;	
 
 
     /**
@@ -103,6 +110,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
      * @param \Magento\Framework\Webapi\Rest\Response              $response
 	 * @param \Magento\Framework\Message\ManagerInterface          $messageManager	 
      * @param \PDP\Integration\Helper\CorsResponseHelper           $corsResponseHelper
+	 * @param Json $serializer
      */
     public function __construct(
         DataObjectFactory $objectFactory,
@@ -118,7 +126,8 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		\Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Framework\Webapi\Rest\Response $response,
 		\Magento\Framework\Message\ManagerInterface $messageManager,
-        CorsResponseHelper $corsResponseHelper
+        CorsResponseHelper $corsResponseHelper,
+		Json $serializer = null
     ) {
         $this->objectFactory = $objectFactory;
 		$this->pdpReponseFactory = $pdpReponseFactory;
@@ -134,6 +143,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 		$this->_response = $response;
 		$this->messageManager = $messageManager;
 		$this->_corsResponseHelper = $corsResponseHelper;
+		$this->serializer = $serializer ?: ObjectManager::getInstance()->get(Json::class);
     }
 	
     /**
@@ -368,7 +378,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 										}
 										$_additionalOptions = $additionalOptions;
 										$_additionalOptions[] = array('label' => __('Size'), 'value' => ucfirst($mtize_val[0]['size']));
-										$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+										$_product->addCustomOption('additional_options', $this->serializer->serialize($_additionalOptions));
 										$this->cart->addProduct($_product, $_infoRequest);
 									}
 									$this->cart->save();
@@ -399,7 +409,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 														'pdp_product_id' => $pdpProductId,
 														'sku' => $pdpItem->getSku(),
 														'store_id' => $__quoteItem->getStoreId(),
-														'value' => serialize($_dataOpt)
+														'value' => $this->serializer->serialize($_dataOpt)
 													);
 													if($pdpItem->getDesignId()) {
 														$data['design_id'] = $pdpItem->getDesignId();
@@ -419,7 +429,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 									}
 								}
 							} else {
-								$product->addCustomOption('additional_options', serialize($additionalOptions));
+								$product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
 								$this->cart->addProduct($product, $infoRequest);
 								$this->cart->save();
 								try {
@@ -439,7 +449,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												'pdp_product_id' => $pdpProductId,
 												'sku' => $pdpItem->getSku(),
 												'store_id' => $itembypro->getStoreId(),
-												'value' => serialize($dataOpt)
+												'value' => $this->serializer->serialize($dataOpt)
 											);
 											if($pdpItem->getDesignId()) {
 												$data['design_id'] = $pdpItem->getDesignId();
@@ -501,7 +511,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 										}
 										$_additionalOptions = $additionalOptions;
 										$_additionalOptions[] = array('label' => __('Size'), 'value' => ucfirst($mtize_val[0]['size']));
-										$_product->addCustomOption('additional_options', serialize($_additionalOptions));
+										$_product->addCustomOption('additional_options', $this->serializer->serialize($_additionalOptions));
 										$this->cart->addProduct($_product, $_infoRequest);
 									}
 									$this->cart->save();
@@ -532,7 +542,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 														'pdp_product_id' => $pdpProductId,
 														'sku' => $pdpItem->getSku(),
 														'store_id' => $__quoteItem->getStoreId(),
-														'value' => serialize($_dataOpt)
+														'value' => $this->serializer->serialize($_dataOpt)
 													);
 													if($pdpItem->getDesignId()) {
 														$data['design_id'] = $pdpItem->getDesignId();
@@ -552,7 +562,8 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 									}
 								}
 							} else {
-								$product->addCustomOption('additional_options', serialize($additionalOptions));
+								$product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
+								//echo '<pre>';print_r($product->getCustomOptions());die('mk');
 								$this->cart->addProduct($product, $infoRequest);
 								$this->cart->save();
 								try {
@@ -572,7 +583,7 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 												'pdp_product_id' => $pdpProductId,
 												'sku' => $pdpItem->getSku(),
 												'store_id' => $itembypro->getStoreId(),
-												'value' => serialize($dataOpt)
+												'value' => $this->serializer->serialize($dataOpt)
 											);
 											if($pdpItem->getDesignId()) {
 												$data['design_id'] = $pdpItem->getDesignId();
