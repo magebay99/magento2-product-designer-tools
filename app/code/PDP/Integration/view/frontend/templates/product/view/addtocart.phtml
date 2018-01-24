@@ -60,8 +60,10 @@ $type_show_product = $helper->getTypeShowProductDesign();
 		?>
 			custom_class += '<?php echo $class_custom_inline ?>';
 			iframehtml = '<div id="wrapper_iframe" class="iframe_design <?php echo $class_custom_inline ?>"></div>';
-		<?php } elseif ($type_show_product == 1){ $id_iframe = 'pdp_iframe';	$iframe_height ='100%';?>
+		<?php } elseif ($type_show_product == 1){ ?>
 			iframehtml = '<div id="wrapper_iframe"></div>';
+			$id_iframe = 'pdp_iframe';
+			$iframe_height ='100%';
 		<?php } ?>		
 		setTimeout(function() {
 			$('[id=maincontent]').after(iframehtml);

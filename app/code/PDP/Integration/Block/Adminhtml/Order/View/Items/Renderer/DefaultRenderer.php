@@ -64,7 +64,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Order\View\Items\Re
 			$designId = $pdpCart[0]['design_id'];
 			$pdpProductId = $pdpCart[0]['pdp_product_id'];
 			$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
-			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
+			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->getDesignByDesignId($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
 				$html .= '<span style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</span>';

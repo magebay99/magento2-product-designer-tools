@@ -54,10 +54,7 @@ class PdpItemPrice implements ObserverInterface {
 			if(isset($infoRequest['pdp_price']) && $infoRequest['pdp_price']) {
 				$pdpPrice = $infoRequest['pdp_price'];
 				$pdpPrice = $this->_priceHelper->currency($pdpPrice,false,false);
-				$productPrice = $product->getFinalPrice();
-				$productPrice = $this->_priceHelper->currency($productPrice,false,false);
-				$price = $productPrice + $pdpPrice;
-				//$price = $product->getPrice() + $infoRequest['pdp_price'];
+				$price = $pdpPrice;
 				$item->setCustomPrice($price);
 				$item->setOriginalCustomPrice($price);
 				$item->getProduct()->setIsSuperMode(true);			
