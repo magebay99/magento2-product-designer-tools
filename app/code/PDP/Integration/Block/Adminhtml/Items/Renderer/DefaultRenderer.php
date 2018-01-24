@@ -47,7 +47,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
 			$urlTool = $this->_pdpOptions->getUrlToolDesign();
 			$designId = $pdpCart[0]['design_id'];
 			$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
-			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
+			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->getDesignByDesignId($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
 				$html .= '<span style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</span>';

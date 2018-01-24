@@ -83,7 +83,7 @@ class Renderer extends \Magento\Checkout\Block\Cart\Item\Renderer {
 			$designId = $pdpCart[0]['design_id'];
 			$pdpProductId = $pdpCart[0]['pdp_product_id'];
 			$html .= $this->getHtmlNameNumber($pdpCart[0]['value'], $item);
-			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
+			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->getDesignByDesignId($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
 				$html .= '<strong style="margin-bottom:5px;display:block;">'.__('Customized Design:').'</strong>';

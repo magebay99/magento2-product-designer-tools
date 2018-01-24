@@ -44,7 +44,7 @@ class DefaultOrder extends \Magento\Sales\Block\Order\Email\Items\Order\DefaultO
 		if(count($pdpCart)) {
 			$urlTool = $this->_pdpOptions->getUrlToolDesign();
 			$designId = $pdpCart[0]['design_id'];
-			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($designId);
+			$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->getDesignByDesignId($designId);
 			if($pdpDesignJson->getDesignId()) {
 				$sideThubms = unserialize($pdpDesignJson->getSideThumb());
 				$html = '<strong style="display:block;margin-bottom:5px;">'.__('Customized Design:').'</strong>';

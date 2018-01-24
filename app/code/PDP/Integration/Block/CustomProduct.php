@@ -138,7 +138,7 @@ class CustomProduct extends \PDP\Integration\Block\AbstractPdpAcc {
 	 */
 	public function getDesignWithId($id) {
 		$sideThubms = array();
-		$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->load($id);
+		$pdpDesignJson = $this->_objectManager->get('PDP\Integration\Model\PdpDesignJson')->getDesignByDesignId($id);
 		if($pdpDesignJson->getDesignId()) {
 			$sideThubms = unserialize($pdpDesignJson->getSideThumb());
 		}

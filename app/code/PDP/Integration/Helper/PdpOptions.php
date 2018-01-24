@@ -14,9 +14,10 @@ class PdpOptions extends AbstractHelper {
 	
     const PATH_CONFIG_BUTTON_CUSTOM_LABEL = 'pdpintegrat/general/labelbutton';
 	
-	const PATH_CONFIG_USINGPOPUP_DESIGN = 'pdpintegrat/general/usingpopup';
-	
-	const PATH_CONFIG_INLINE_CLASS_DESIGN = 'pdpintegrat/general/inline_class';
+    const PATH_CONFIG_USINGPOPUP_DESIGN = 'pdpintegrat/general/usingpopup';
+    
+    const PATH_CONFIG_SEPARATEDB_PDP = 'pdpintegrat/general/separatedb';
+    const PATH_CONFIG_INLINE_CLASS_DESIGN = 'pdpintegrat/general/inline_class';
 	
 	/**
      * @var PdpquoteCollectionFactory
@@ -105,6 +106,18 @@ class PdpOptions extends AbstractHelper {
             ScopeInterface::SCOPE_STORE
         );
     }
+    
+    /**
+     * Retrieve true if separate database is enable
+     * @return boolean
+     */
+    public function separateDatabase()
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_CONFIG_SEPARATEDB_PDP,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
 	
 	/**
 	 * @param int $itemId
@@ -151,12 +164,12 @@ class PdpOptions extends AbstractHelper {
 		$url = '#';
 		if($this->statusPdpIntegration()) {
 			$proId = '';
-			$pdpProdu = $this->_objectmanager->get('PDP\Integration\Model\PdpProductType')->getProductWithSku($sku);
-			foreach($pdpProdu as $key => $value) {
-				if(isset($value['type_id'])) {
-					$proId = $value['type_id'];
-				}
-			}
+                        $pdpProdu = $this->_objectmanager->get('PDP\Integration\Model\PdpProductType')->getProductWithSku($sku);
+                        foreach($pdpProdu as $key => $value) {
+                                if(isset($value['type_id'])) {
+                                        $proId = $value['type_id'];
+                                }
+                        }
 			if($proId) {
 				$url = $this->getUrlToolDesign().'/?pid='.$proId;
 			} elseif( strpos($sku,'CustomDismensionProd') !== false ) {
@@ -214,6 +227,18 @@ class PdpOptions extends AbstractHelper {
 	public function getClassCustomInline() {
         return $this->scopeConfig->getValue(
             self::PATH_CONFIG_INLINE_CLASS_DESIGN,
+            ScopeInterface::SCOPE_STORE
+        );
+	}
+	
+		/**
+	* 
+	* Retrieve true if using popup for design
+	* @return boolean
+	*/
+	public function isUsingPopupDesign() {
+        return $this->scopeConfig->getValue(
+            self::PATH_CONFIG_USINGPOPUP_DESIGN,
             ScopeInterface::SCOPE_STORE
         );
 	}
