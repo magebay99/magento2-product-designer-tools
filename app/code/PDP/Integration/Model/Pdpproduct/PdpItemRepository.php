@@ -241,12 +241,19 @@ class PdpItemRepository implements PdpItemRepositoryInterface {
 							if (isset($infoRequest['pdp_price'])) {
 								$infoRequest['pdp_price'] += $_info_request['pdp_price'];
 							} else {
-								$infoRequest['pdp_price'] += $_info_request['pdp_price'];
+								$infoRequest['pdp_price'] = $_info_request['pdp_price'];
 							}
 						}
 						$additionalOptions = $this->_pdpOptions->getAdditionOption($pdpOptSelect);
 						$dataOpt['pdp_options'] = $pdpOptSelect;
 					}
+                                        if($pdpItem->getSidePrice()) {
+                                            if (isset($infoRequest['pdp_price'])) {
+                                                $infoRequest['pdp_price'] += $pdpItem->getSidePrice();
+                                            } else {
+                                                $infoRequest['pdp_price'] = $pdpItem->getSidePrice();
+                                            }
+                                        }
 					if($pdpItem->getDesignId()) {
 						$infoRequest['design_id'] = $pdpItem->getDesignId();
 						$additionalOptions[] = array('label' => 'Design Id', 'value' => 'pdp_design_id'.$pdpItem->getDesignId());

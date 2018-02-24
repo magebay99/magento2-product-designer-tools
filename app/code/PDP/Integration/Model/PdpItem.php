@@ -226,4 +226,22 @@ class PdpItem extends AbstractExtensibleObject implements PdpItemInterface {
     public function setPdpPrintType(\PDP\Integration\Api\Data\PdpPrintTypeInterface $pdpPrintType) {
 		return $this->setData(self::PDP_PRINT_TYPE, $pdpPrintType);
 	}	
+        
+    /**
+     * Gets the pdp side price.
+     *
+     * @return float|null
+     */
+    public function getSidePrice() {
+		return $this->_get(self::PDP_SIDE_PRICE);
+	}
+
+    /**
+     * Sets the pdp side price.
+     * @param  float $pdpSidePrice
+     * @return $this
+     */
+    public function setSidePrice($pdpSidePrice) {
+		return $this->setData(self::PDP_SIDE_PRICE, $pdpSidePrice);
+	}	
 }
