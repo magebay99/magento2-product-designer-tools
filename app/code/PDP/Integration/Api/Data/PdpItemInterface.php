@@ -42,6 +42,8 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
     const PDP_OPTIONS = 'pdp_options';
 	
     const PDP_PRINT_TYPE = 'pdp_print_type';
+    
+    const PDP_SIDE_PRICE = 'side_price';
 	
     /**
      * Gets the ID for the pdpproduct.
@@ -215,5 +217,21 @@ interface PdpItemInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
 	 * @param \PDP\Integration\Api\Data\PdpPrintTypeInterface $pdpPrintType
      * @return $this
      */
-    public function setPdpPrintType(\PDP\Integration\Api\Data\PdpPrintTypeInterface $pdpPrintType);	
+    public function setPdpPrintType(\PDP\Integration\Api\Data\PdpPrintTypeInterface $pdpPrintType);
+    
+    /**
+     * Gets the pdp side price.
+     *
+     * @return float|null
+     */
+    public function getSidePrice();
+	
+    /**
+     * Sets the pdp side price.
+	 * @param float $pdpSidePrice
+     * @return $this
+     */
+    public function setSidePrice($pdpSidePrice);	
+    
+    
 }
