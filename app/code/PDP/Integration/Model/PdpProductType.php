@@ -75,7 +75,7 @@ class PdpProductType extends \Magento\Framework\Model\AbstractModel {
     public function getProductWithSku($sku) {
         if($this->_pdpOptions->separateDatabase()){
             $url = rtrim($this->_pdpOptions->getUrlToolDesign(),'/');
-            $url .= '/rest/commerce?product=1&sku=' . $sku;
+            $url .= '/rest/commerce?product=1&sku=' . urlencode($sku);
             /* init curl */
             $this->getCurl()->setUrl($url);
             $result = $this->getCurl()->exec();
